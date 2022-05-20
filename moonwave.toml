@@ -1,0 +1,15 @@
+# TODO: Write docs
+
+title = "OculusLib"
+
+gitRepoUrl = "https://github.com/raphtalia/OculusLib"
+gitSourceBranch = "main"
+
+classOrder = []
+
+[home]
+enabled = true
+includeReadme = true
+
+[footer]
+copyright = "Copyright © 2022 raphtalia"

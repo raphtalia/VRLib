@@ -1,0 +1,15 @@
+[package]
+description = "VR library for the Oculus Quest 2 headset"
+exclude = ["*"]
+include = ["src", "src/*", "default.project.json", "wally.toml", "LICENSE"]
+license = "MIT"
+name = "raphtalia/oculuslib"
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+version = "1.0.0"
+
+[dependencies]
+EnumList = "sleitnick/enum-list@2.0.0"
+Promise = "evaera/promise@3.2.1"
+Signal = "sleitnick/signal@1.1.0"
+t = "osyrisrblx/t@3.0.0"
