@@ -26,7 +26,6 @@ end
 
 function Headset:constructor()
     -- roblox-ts compatibility
-
     fixSuperclass(self, Headset, HEADSET_METATABLE)
 
     rawset(self, "_velocity", Vector3.new())

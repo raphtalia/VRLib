@@ -2,43 +2,14 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local Signal = require(script.Parent.Parent.Signal)
-local Hand = require(script.Parent.Hand)
 local t = require(script.Parent.Types).Controller
 
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 
-local GAMEPAD_KEYCODES = {
-    [Hand.Left] = {
-        Enum.KeyCode.ButtonL1,
-        Enum.KeyCode.ButtonL2,
-        Enum.KeyCode.Thumbstick1,
-        Enum.KeyCode.ButtonY,
-        Enum.KeyCode.ButtonX,
-    },
-    [Hand.Right] = {
-        Enum.KeyCode.ButtonR1,
-        Enum.KeyCode.ButtonR2,
-        Enum.KeyCode.Thumbstick2,
-        Enum.KeyCode.ButtonB,
-        Enum.KeyCode.ButtonA,
-    }
-}
-local GAMEPAD_KEYCODES_MAP = {
-    [Hand.Left] = {
-        HandTrigger = Enum.KeyCode.ButtonL1,
-        IndexTrigger = Enum.KeyCode.ButtonL2,
-        Thumbstick = Enum.KeyCode.Thumbstick1,
-    },
-    [Hand.Right] = {
-        HandTrigger = Enum.KeyCode.ButtonR1,
-        IndexTrigger = Enum.KeyCode.ButtonR2,
-        Thumbstick = Enum.KeyCode.Thumbstick2,
-    },
-}
-local HAND_USER_CFRAME_MAP = {
-    [Hand.Left] = Enum.UserCFrame.LeftHand,
-    [Hand.Right] = Enum.UserCFrame.RightHand,
-}
+local Constants = require(script.Parent.Constants)
+local GAMEPAD_KEYCODES = Constants.GAMEPAD_KEYCODES
+local GAMEPAD_KEYCODES_MAP = Constants.GAMEPAD_KEYCODES_MAP
+local HAND_USER_CFRAME_MAP = Constants.HAND_USER_CFRAME_MAP
 
 -- Doesn't filter out all controllers but better than assuming its just Gamepad1
 local function getOculusControllerGamepadNum()
@@ -91,10 +62,7 @@ function CONTROLLER_METATABLE:__index(i)
     end
 end
 function CONTROLLER_METATABLE:__newindex(i, v)
-    if i == "Hand" then
-        t.Hand(v)
-        rawset(self, "_hand", v)
-    elseif i == "GamepadNum" then
+    if i == "GamepadNum" then
         t.GamepadNum(v)
         rawset(self, "_gamepadNum", v)
     else
@@ -103,9 +71,9 @@ function CONTROLLER_METATABLE:__newindex(i, v)
 end
 
 function Controller:constructor(hand)
-    -- roblox-ts compatibility
     t.new(hand)
 
+    -- roblox-ts compatibility
     fixSuperclass(self, Controller, CONTROLLER_METATABLE)
 
     rawset(self, "_velocity", Vector3.new())
@@ -138,7 +106,7 @@ function Controller:constructor(hand)
         end
     end))
 
-    rawset(self, "InputEndedConnection", UserInputService.InputBegan:Connect(function(inputObj)
+    rawset(self, "InputEndedConnection", UserInputService.InputEnded:Connect(function(inputObj)
         if inputObj.UserInputType == self.GamepadNum then
             local keyCode = inputObj.KeyCode
 
@@ -148,7 +116,7 @@ function Controller:constructor(hand)
         end
     end))
 
-    rawset(self, "InputChangedConnection", UserInputService.InputBegan:Connect(function(inputObj)
+    rawset(self, "InputChangedConnection", UserInputService.InputChanged:Connect(function(inputObj)
         if inputObj.UserInputType == self.GamepadNum then
             local keyCode = inputObj.KeyCode
             local delta = inputObj.Delta
@@ -181,6 +149,10 @@ function CONTROLLER_METATABLE:Destroy()
     rawget(self, "InputBeganConnection"):Disconnect()
     rawget(self, "InputEndedConnection"):Disconnect()
     rawget(self, "InputChangedConnection"):Disconnect()
+end
+
+function CONTROLLER_METATABLE:IsButtonDown(gamepadKeyCode)
+    return UserInputService:IsGamepadButtonDown(self.GamepadNum, gamepadKeyCode)
 end
 
 -- roblox-ts compatability

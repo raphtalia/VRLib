@@ -19,4 +19,9 @@ return {
             assert(Hand:BelongsTo(hand), "Expected Hand EnumItem")
         end,
     },
+    ControllerAdornee = {
+        new = function(controller, controllers)
+
+        end,
+    },
 }
