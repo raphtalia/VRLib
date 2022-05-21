@@ -12,7 +12,6 @@ local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 
 local Constants = require(script.Parent.Constants)
 local HAND_CONTROLLER_NAME_MAP = Constants.HAND_CONTROLLER_NAME_MAP
-local GAMEPAD_KEYCODES_MAP = Constants.GAMEPAD_KEYCODES_MAP
 
 local ControllerAdornee = {}
 local CONTROLLER_ADORNEE_METATABLE = {}
@@ -75,16 +74,16 @@ function ControllerAdornee:constructor(controller, controllers)
         local root = self.RootPart.Root
         local hand = con.Hand
 
-        root.Thumbstick.CFrame = root.Thumbstick.OriginalCFrame.Value * CFrame.new(0, if con:IsButtonDown(GAMEPAD_KEYCODES_MAP[hand].Thumbstick) then 1 else 0, 0) * CFrame.Angles(math.rad(con.ThumbstickLocation.Y * 20), 0, math.rad(con.ThumbstickLocation.X * 20))
+        root.Thumbstick.CFrame = root.Thumbstick.OriginalCFrame.Value * CFrame.new(0, if con:IsThumbstickDown() then -0.005 else 0, 0) * CFrame.Angles(math.rad(con.ThumbstickLocation.Y * 20), 0, math.rad(con.ThumbstickLocation.X * 20))
         root.HandTrigger.CFrame = root.HandTrigger.OriginalCFrame.Value * CFrame.new(0, -con.HandTriggerPosition * 0.015, 0)
         root.IndexTrigger.CFrame = root.IndexTrigger.OriginalCFrame.Value * CFrame.Angles(math.rad(con.IndexTriggerPosition * 20), 0, 0)
 
         if hand == Hand.Left then
-            root.ButtonY.CFrame = root.ButtonY.OriginalCFrame.Value * CFrame.new(0, if con:IsButtonDown(Enum.KeyCode.ButtonY) then -0.005 else 0, 0)
-            root.ButtonX.CFrame = root.ButtonX.OriginalCFrame.Value * CFrame.new(0, if con:IsButtonDown(Enum.KeyCode.ButtonX) then -0.005 else 0, 0)
+            root.ButtonY.CFrame = root.ButtonY.OriginalCFrame.Value * CFrame.new(0, if con:IsButton1Down() then -0.005 else 0, 0)
+            root.ButtonX.CFrame = root.ButtonX.OriginalCFrame.Value * CFrame.new(0, if con:IsButton2Down() then -0.005 else 0, 0)
         elseif hand == Hand.Right then
-            root.ButtonB.CFrame = root.ButtonB.OriginalCFrame.Value * CFrame.new(0, if con:IsButtonDown(Enum.KeyCode.ButtonB) then -0.005 else 0, 0)
-            root.ButtonA.CFrame = root.ButtonA.OriginalCFrame.Value * CFrame.new(0, if con:IsButtonDown(Enum.KeyCode.ButtonA) then -0.005 else 0, 0)
+            root.ButtonB.CFrame = root.ButtonB.OriginalCFrame.Value * CFrame.new(0, if con:IsButton1Down() then -0.005 else 0, 0)
+            root.ButtonA.CFrame = root.ButtonA.OriginalCFrame.Value * CFrame.new(0, if con:IsButton2Down() then -0.005 else 0, 0)
         end
     end))
 end

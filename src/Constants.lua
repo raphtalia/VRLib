@@ -1,32 +1,22 @@
 local Hand = require(script.Parent.Hand)
 
 return {
-    GAMEPAD_KEYCODES = {
-        [Hand.Left] = {
-            Enum.KeyCode.ButtonL1,
-            Enum.KeyCode.ButtonL2,
-            Enum.KeyCode.Thumbstick1,
-            Enum.KeyCode.ButtonY,
-            Enum.KeyCode.ButtonX,
-        },
-        [Hand.Right] = {
-            Enum.KeyCode.ButtonR1,
-            Enum.KeyCode.ButtonR2,
-            Enum.KeyCode.Thumbstick2,
-            Enum.KeyCode.ButtonB,
-            Enum.KeyCode.ButtonA,
-        }
-    },
-    GAMEPAD_KEYCODES_MAP = {
+    CONTROLLER_KEYCODES = {
         [Hand.Left] = {
             HandTrigger = Enum.KeyCode.ButtonL1,
             IndexTrigger = Enum.KeyCode.ButtonL2,
             Thumbstick = Enum.KeyCode.Thumbstick1,
+            ThumbstickButton = Enum.KeyCode.ButtonL3,
+            Button1 = Enum.KeyCode.ButtonY,
+            Button2 = Enum.KeyCode.ButtonX,
         },
         [Hand.Right] = {
             HandTrigger = Enum.KeyCode.ButtonR1,
             IndexTrigger = Enum.KeyCode.ButtonR2,
             Thumbstick = Enum.KeyCode.Thumbstick2,
+            ThumbstickButton = Enum.KeyCode.ButtonR3,
+            Button1 = Enum.KeyCode.ButtonB,
+            Button2 = Enum.KeyCode.ButtonA,
         },
     },
     HAND_USER_CFRAME_MAP = {

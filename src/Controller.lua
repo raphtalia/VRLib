@@ -8,7 +8,7 @@ local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 
 local Constants = require(script.Parent.Constants)
 local GAMEPAD_KEYCODES = Constants.GAMEPAD_KEYCODES
-local GAMEPAD_KEYCODES_MAP = Constants.GAMEPAD_KEYCODES_MAP
+local CONTROLLER_KEYCODES = Constants.CONTROLLER_KEYCODES
 local HAND_USER_CFRAME_MAP = Constants.HAND_USER_CFRAME_MAP
 
 -- Doesn't filter out all controllers but better than assuming its just Gamepad1
@@ -45,10 +45,28 @@ function CONTROLLER_METATABLE:__index(i)
         return rawget(self, "_indexTriggerPosition")
     elseif i == "ThumbstickLocation" then
         return rawget(self, "_thumbstickLocation")
-    elseif i == "ButtonDown" then
-        return rawget(self, "_buttonDown")
-    elseif i == "ButtonUp" then
-        return rawget(self, "_buttonUp")
+    elseif i == "Button1Down" then
+        return rawget(self, "_button1Down")
+    elseif i == "Button1Up" then
+        return rawget(self, "_button1Up")
+    elseif i == "Button2Down" then
+        return rawget(self, "_button2Down")
+    elseif i == "Button2Up" then
+        return rawget(self, "_button2Up")
+    elseif i == "HandTriggerUp" then
+        return rawget(self, "_handTriggerUp")
+    elseif i == "HandTriggerDown" then
+        return rawget(self, "_handTriggerDown")
+    elseif i == "IndexTriggerUp" then
+        return rawget(self, "_indexTriggerUp")
+    elseif i == "IndexTriggerDown" then
+        return rawget(self, "_indexTriggerDown")
+    elseif i == "ThumbstickUp" then
+        return rawget(self, "_thumbstickUp")
+    elseif i == "ThumbstickDown" then
+        return rawget(self, "_thumbstickDown")
+    elseif i == "ThumbstickReleased" then
+        return rawget(self, "_thumbstickReleased")
     elseif i == "HandTriggerChanged" then
         return rawget(self, "_handTriggerChanged")
     elseif i == "IndexTriggerChanged" then
@@ -82,8 +100,17 @@ function Controller:constructor(hand)
     rawset(self, "_handTriggerPosition", 0)
     rawset(self, "_indexTriggerPosition", 0)
     rawset(self, "_thumbstickLocation", Vector2.new(0, 0))
-    rawset(self, "_buttonDown", Signal.new())
-    rawset(self, "_buttonUp", Signal.new())
+    rawset(self, "_button1Down", Signal.new())
+    rawset(self, "_button1Up", Signal.new())
+    rawset(self, "_button2Down", Signal.new())
+    rawset(self, "_button2Up", Signal.new())
+    rawset(self, "_handTriggerUp", Signal.new())
+    rawset(self, "_handTriggerDown", Signal.new())
+    rawset(self, "_indexTriggerUp", Signal.new())
+    rawset(self, "_indexTriggerDown", Signal.new())
+    rawset(self, "_thumbstickUp", Signal.new())
+    rawset(self, "_thumbstickDown", Signal.new())
+    rawset(self, "_thumbstickReleased", Signal.new())
     rawset(self, "_handTriggerChanged", Signal.new())
     rawset(self, "_indexTriggerChanged", Signal.new())
     rawset(self, "_thumbstickChanged", Signal.new())
@@ -99,9 +126,20 @@ function Controller:constructor(hand)
     rawset(self, "InputBeganConnection", UserInputService.InputBegan:Connect(function(inputObj)
         if inputObj.UserInputType == self.GamepadNum then
             local keyCode = inputObj.KeyCode
+            local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
-            if table.find(GAMEPAD_KEYCODES[self.Hand], keyCode) then
-                self._buttonDown:Fire(keyCode)
+            if keyCode == keyCodeMap.HandTrigger then
+                self.HandTriggerDown:Fire()
+                rawset(self, "_handTriggerPosition", 1)
+            elseif keyCode == keyCodeMap.IndexTrigger then
+                self.IndexTriggerDown:Fire()
+                rawset(self, "_indexTriggerPosition", 1)
+            elseif keyCode == keyCodeMap.ThumbstickButton then
+                self.ThumbstickDown:Fire()
+            elseif keyCode == keyCodeMap.Button1 then
+                self.Button1Down:Fire()
+            elseif keyCode == keyCodeMap.Button2 then
+                self.Button2Down:Fire()
             end
         end
     end))
@@ -109,9 +147,23 @@ function Controller:constructor(hand)
     rawset(self, "InputEndedConnection", UserInputService.InputEnded:Connect(function(inputObj)
         if inputObj.UserInputType == self.GamepadNum then
             local keyCode = inputObj.KeyCode
+            local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
-            if table.find(GAMEPAD_KEYCODES[self.Hand], keyCode) then
-                self._buttonUp:Fire(keyCode)
+            if keyCode == keyCodeMap.HandTrigger then
+                self.HandTriggerDown:Fire()
+                rawset(self, "_handTriggerPosition", 0)
+            elseif keyCode == keyCodeMap.IndexTrigger then
+                self.IndexTriggerDown:Fire()
+                rawset(self, "_indexTriggerPosition", 0)
+            elseif keyCode == keyCodeMap.Thumbstick then
+                self.ThumbstickReleased:Fire()
+                rawset(self, "_thumbstickLocation", Vector2.new(0, 0))
+            elseif keyCode == keyCodeMap.ThumbstickButton then
+                self.ThumbstickUp:Fire()
+            elseif keyCode == keyCodeMap.Button1 then
+                self.Button1Down:Fire()
+            elseif keyCode == keyCodeMap.Button2 then
+                self.Button2Down:Fire()
             end
         end
     end))
@@ -120,14 +172,15 @@ function Controller:constructor(hand)
         if inputObj.UserInputType == self.GamepadNum then
             local keyCode = inputObj.KeyCode
             local delta = inputObj.Delta
+            local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
-            if keyCode == GAMEPAD_KEYCODES_MAP[self.Hand].HandTrigger then
+            if keyCode == keyCodeMap.HandTrigger then
                 rawset(self, "_handTriggerPosition", rawget(self, "_handTriggerPosition") + delta.Z)
                 self.HandTriggerChanged:Fire(self.HandTriggerPosition, delta.Z)
-            elseif keyCode == GAMEPAD_KEYCODES_MAP[self.Hand].IndexTrigger then
+            elseif keyCode == keyCodeMap.IndexTrigger then
                 rawset(self, "_indexTriggerPosition", rawget(self, "_indexTriggerPosition") + delta.Z)
                 self.IndexTriggerChanged:Fire(self.IndexTriggerPosition, delta.Z)
-            elseif keyCode == GAMEPAD_KEYCODES_MAP[self.Hand].Thumbstick then
+            elseif keyCode == keyCodeMap.Thumbstick then
                 local vec2Delta = Vector2.new(delta.X, delta.Y)
                 rawset(self, "_thumbstickLocation", rawget(self, "_thumbstickLocation") + vec2Delta)
                 self.ThumbstickChanged:Fire(self.ThumbstickLocation, vec2Delta)
@@ -151,8 +204,16 @@ function CONTROLLER_METATABLE:Destroy()
     rawget(self, "InputChangedConnection"):Disconnect()
 end
 
-function CONTROLLER_METATABLE:IsButtonDown(gamepadKeyCode)
-    return UserInputService:IsGamepadButtonDown(self.GamepadNum, gamepadKeyCode)
+function CONTROLLER_METATABLE:IsThumbstickDown()
+    return UserInputService:IsGamepadButtonDown(self.GamepadNum, CONTROLLER_KEYCODES[self.Hand].ThumbstickButton)
+end
+
+function CONTROLLER_METATABLE:IsButton1Down()
+    return UserInputService:IsGamepadButtonDown(self.GamepadNum, CONTROLLER_KEYCODES[self.Hand].Button1)
+end
+
+function CONTROLLER_METATABLE:IsButton2Down()
+    return UserInputService:IsGamepadButtonDown(self.GamepadNum, CONTROLLER_KEYCODES[self.Hand].Button2)
 end
 
 -- roblox-ts compatability
