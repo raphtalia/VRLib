@@ -38,7 +38,7 @@ function CONTROLLER_ADORNEE_METATABLE:__newindex(i, v)
 end
 
 function ControllerAdornee:constructor(controller, controllers)
-    t.new(controller)
+    t.new(controller, controllers)
 
     -- roblox-ts compatibility
     fixSuperclass(self, ControllerAdornee, CONTROLLER_ADORNEE_METATABLE)
@@ -57,17 +57,18 @@ function ControllerAdornee:constructor(controller, controllers)
     rawset(self, "_model", model)
     rawset(self, "_destroying", Signal.new())
 
-    rawset(self, "HeartbeatConnection", RunService.Heartbeat:Connect(function(dt)
+    rawset(self, "HeartbeatConnection", RunService.Heartbeat:Connect(function()
         -- Moving the controllers to their virtual position relative to camera
-        local oldCF = self.RootPart.CFrame
+        local adorneeModel = self.Model
+        local oldCF = adorneeModel:GetPivot()
         local newCF = camera.CFrame * self.Controller.CFrame
 
-        -- if (newCF.Position - oldCF.Position).Magnitude < 1 then
-        --     -- Reduces jitter
-        --     newCF = oldCF:Lerp(newCF, 0.2)
-        -- end
+        if (newCF.Position - oldCF.Position).Magnitude < 1 then
+            -- Reduces jitter
+            newCF = oldCF:Lerp(newCF, 0.2)
+        end
 
-        self.Model:PivotTo(newCF)
+        adorneeModel:PivotTo(newCF)
 
         -- Animating the buttons
         local con = self.Controller

@@ -1,14 +1,16 @@
 local RunService = game:GetService("RunService")
+local HapticService = game:GetService("HapticService")
 local UserInputService = game:GetService("UserInputService")
 
 local Signal = require(script.Parent.Parent.Signal)
+local Promise = require(script.Parent.Parent.Promise)
 local t = require(script.Parent.Types).Controller
 
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 
 local Constants = require(script.Parent.Constants)
-local GAMEPAD_KEYCODES = Constants.GAMEPAD_KEYCODES
 local CONTROLLER_KEYCODES = Constants.CONTROLLER_KEYCODES
+local HAND_VIBRATION_MOTOR_MAP = Constants.HAND_VIBRATION_MOTOR_MAP
 local HAND_USER_CFRAME_MAP = Constants.HAND_USER_CFRAME_MAP
 
 -- Doesn't filter out all controllers but better than assuming its just Gamepad1
@@ -16,11 +18,17 @@ local function getOculusControllerGamepadNum()
     local gamepadNums = UserInputService:GetConnectedGamepads()
 
     for _,gamepadNum in ipairs(gamepadNums) do
-        for _,keycode in ipairs(GAMEPAD_KEYCODES) do
-            if not UserInputService:GamepadSupports(gamepadNum, keycode) then
-                break
-            end
+        -- Check for controllers with vibration motors due to GamepadSupports() returning false for all Oculus controller KeyCodes
+        local valid = true
 
+        for _,vibrationMotor in ipairs(HAND_VIBRATION_MOTOR_MAP) do
+           if HapticService:IsMotorSupported(gamepadNum, vibrationMotor) then
+               valid = false
+               break
+           end
+        end
+
+        if valid then
             return gamepadNum
         end
     end
@@ -45,6 +53,8 @@ function CONTROLLER_METATABLE:__index(i)
         return rawget(self, "_indexTriggerPosition")
     elseif i == "ThumbstickLocation" then
         return rawget(self, "_thumbstickLocation")
+    elseif i == "VibrationValue" then
+        return HapticService:GetMotor(self.GamepadNum, HAND_VIBRATION_MOTOR_MAP[self.Hand])
     elseif i == "Button1Down" then
         return rawget(self, "_button1Down")
     elseif i == "Button1Up" then
@@ -88,15 +98,15 @@ function CONTROLLER_METATABLE:__newindex(i, v)
     end
 end
 
-function Controller:constructor(hand)
-    t.new(hand)
+function Controller:constructor(hand, gamepadNum)
+    t.new(hand, gamepadNum)
 
     -- roblox-ts compatibility
     fixSuperclass(self, Controller, CONTROLLER_METATABLE)
 
     rawset(self, "_velocity", Vector3.new())
     rawset(self, "_hand", hand)
-    rawset(self, "_gamepadNum", Enum.UserInputType.Gamepad1)
+    rawset(self, "_gamepadNum", gamepadNum or getOculusControllerGamepadNum())
     rawset(self, "_handTriggerPosition", 0)
     rawset(self, "_indexTriggerPosition", 0)
     rawset(self, "_thumbstickLocation", Vector2.new(0, 0))
@@ -129,11 +139,15 @@ function Controller:constructor(hand)
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
             if keyCode == keyCodeMap.HandTrigger then
-                self.HandTriggerDown:Fire()
+                local delta = 1 - self.HandTriggerPosition
                 rawset(self, "_handTriggerPosition", 1)
+                self.HandTriggerDown:Fire()
+                self.HandTriggerChanged:Fire(self.HandTriggerPosition, delta)
             elseif keyCode == keyCodeMap.IndexTrigger then
-                self.IndexTriggerDown:Fire()
+                local delta = 1 - self.IndexTriggerPosition
                 rawset(self, "_indexTriggerPosition", 1)
+                self.IndexTriggerDown:Fire()
+                self.IndexTriggerChanged:Fire(self.IndexTriggerPosition, delta)
             elseif keyCode == keyCodeMap.ThumbstickButton then
                 self.ThumbstickDown:Fire()
             elseif keyCode == keyCodeMap.Button1 then
@@ -150,20 +164,26 @@ function Controller:constructor(hand)
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
             if keyCode == keyCodeMap.HandTrigger then
-                self.HandTriggerDown:Fire()
+                local delta = -self.HandTriggerPosition
                 rawset(self, "_handTriggerPosition", 0)
+                self.HandTriggerUp:Fire()
+                self.HandTriggerChanged:Fire(self.HandTriggerPosition, delta)
             elseif keyCode == keyCodeMap.IndexTrigger then
-                self.IndexTriggerDown:Fire()
+                local delta = -self.IndexTriggerPosition
                 rawset(self, "_indexTriggerPosition", 0)
+                self.IndexTriggerUp:Fire()
+                self.IndexTriggerChanged:Fire(self.IndexTriggerPosition, delta)
             elseif keyCode == keyCodeMap.Thumbstick then
-                self.ThumbstickReleased:Fire()
+                local delta = -self.ThumbstickLocation
                 rawset(self, "_thumbstickLocation", Vector2.new(0, 0))
+                self.ThumbstickReleased:Fire()
+                self.ThumbstickChanged:Fire(self.ThumbstickLocation, delta)
             elseif keyCode == keyCodeMap.ThumbstickButton then
                 self.ThumbstickUp:Fire()
             elseif keyCode == keyCodeMap.Button1 then
-                self.Button1Down:Fire()
+                self.Button1Up:Fire()
             elseif keyCode == keyCodeMap.Button2 then
-                self.Button2Down:Fire()
+                self.Button2Up:Fire()
             end
         end
     end))
@@ -214,6 +234,40 @@ end
 
 function CONTROLLER_METATABLE:IsButton2Down()
     return UserInputService:IsGamepadButtonDown(self.GamepadNum, CONTROLLER_KEYCODES[self.Hand].Button2)
+end
+
+function CONTROLLER_METATABLE:SetMotor(vibrationValue)
+    local vibrationPromise = rawget(self, "VibrationPromise")
+    if vibrationPromise then
+        vibrationPromise:cancel()
+        -- Wait for promise to finish cancelling
+        task.delay(nil, function()
+            HapticService:SetMotor(self.GamepadNum, HAND_VIBRATION_MOTOR_MAP[self.Hand], vibrationValue)
+        end)
+    else
+        HapticService:SetMotor(self.GamepadNum, HAND_VIBRATION_MOTOR_MAP[self.Hand], vibrationValue)
+    end
+end
+
+function CONTROLLER_METATABLE:Vibrate(vibrationValue, duration)
+    duration = duration or 0.1
+
+    local promise = Promise.new(function(resolve, _, onCancel)
+        local vibrationStartTick = tick()
+        self:SetMotor(vibrationValue)
+
+        repeat
+            task.wait()
+        until onCancel() or tick() - vibrationStartTick >= duration
+
+        HapticService:SetMotor(self.GamepadNum, HAND_VIBRATION_MOTOR_MAP[self.Hand], 0)
+        rawset(self, "VibrationPromise", nil)
+        resolve()
+    end)
+
+
+    rawset(self, "VibrationPromise", promise)
+    return promise
 end
 
 -- roblox-ts compatability

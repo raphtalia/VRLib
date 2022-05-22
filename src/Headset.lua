@@ -55,6 +55,10 @@ function HEADSET_METATABLE:Recenter()
     UserInputService:RecenterUserHeadCFrame()
 end
 
+function HEADSET_METATABLE:MoveTo(cframe)
+    workspace.CurrentCamera.CFrame = cframe
+end
+
 -- roblox-ts compatability
 Headset.default = Headset
 return Headset
