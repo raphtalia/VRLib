@@ -1,8 +1,8 @@
 # TODO: Write docs
 
-title = "OculusLib"
+title = "VRLib"
 
-gitRepoUrl = "https://github.com/raphtalia/OculusLib"
+gitRepoUrl = "https://github.com/raphtalia/VRLib"
 gitSourceBranch = "main"
 
 classOrder = []

@@ -7,11 +7,12 @@ local Controller = {
     Position = t.Vector3,
     Velocity = t.Vector3,
     GamepadNum = t.enum(Enum.UserInputType),
-    HandTriggerPosition = t.number,
+    GripTriggerPosition = t.number,
     IndexTriggerPosition = t.number,
     ThumbstickLocation = t.Vector2,
 }
 local ControllerInterface = t.interface(Controller)
+local Threshold = t.numberConstrainedExclusive(0, 1)
 
 return {
     Headset = {
@@ -59,6 +60,10 @@ return {
         end,
     },
     Thumbstick = {
+        new = function(edgeThreshold)
+            assert(Threshold(edgeThreshold))
+        end,
+
         UpdateLocationAbsolute = function(loc)
             assert(t.Vector2(loc))
         end,
@@ -71,11 +76,15 @@ return {
             assert(t.boolean(isDown))
         end,
 
-        SetEdgeThreshold = function(threshold)
-            assert(t.numberConstrainedExclusive(0, 1)(threshold))
+        SetEdgeThreshold = function(edgeThreshold)
+            assert(Threshold(edgeThreshold))
         end,
     },
     Trigger = {
+        new = function(threshold)
+            assert(Threshold(threshold))
+        end,
+
         UpdateTriggerAbsolute = function(pos)
             assert(t.number(pos))
         end,
@@ -85,7 +94,7 @@ return {
         end,
 
         SetTriggerThreshold = function(threshold)
-            assert(t.numberConstrainedExclusive(0, 1)(threshold))
+            assert(Threshold(threshold))
         end,
     },
 }

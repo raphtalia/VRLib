@@ -2,17 +2,17 @@ local RunService = game:GetService("RunService")
 local HapticService = game:GetService("HapticService")
 local UserInputService = game:GetService("UserInputService")
 
-local Signal = require(script.Parent.Parent.Signal)
-local Promise = require(script.Parent.Parent.Promise)
-local t = require(script.Parent.Types).Controller
+local Signal = require(script.Parent.Parent.Parent.Signal)
+local Promise = require(script.Parent.Parent.Parent.Promise)
+local t = require(script.Parent.Parent.Types).Controller
 
-local Button = require(script.Button)
-local Thumbstick = require(script.Thumbstick)
-local Trigger = require(script.Trigger)
+local Button = require(script.Parent.Parent.Inputs.Button)
+local Thumbstick = require(script.Parent.Parent.Inputs.Thumbstick)
+local Trigger = require(script.Parent.Parent.Inputs.Trigger)
 
-local fixSuperclass = require(script.Parent.Util.fixSuperclass)
+local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
 
-local Constants = require(script.Parent.Constants)
+local Constants = require(script.Parent.Parent.Constants)
 local CONTROLLER_KEYCODES = Constants.CONTROLLER_KEYCODES
 local HAND_VIBRATION_MOTOR_MAP = Constants.HAND_VIBRATION_MOTOR_MAP
 local HAND_USER_CFRAME_MAP = Constants.HAND_USER_CFRAME_MAP
@@ -53,8 +53,8 @@ function CONTROLLER_METATABLE:__index(i)
         return rawget(self, "_gamepadNum")
     elseif i == "Controls" then
         return rawget(self, "_controls")
-    elseif i == "HandTriggerPosition" then
-        return self.Controls.HandTrigger.Position
+    elseif i == "GripTriggerPosition" then
+        return self.Controls.GripTrigger.Position
     elseif i == "IndexTriggerPosition" then
         return self.Controls.IndexTrigger.Position
     elseif i == "ThumbstickLocation" then
@@ -69,14 +69,14 @@ function CONTROLLER_METATABLE:__index(i)
         return self.Controls.Button2.Down
     elseif i == "Button2Up" then
         return self.Controls.Button2.Up
-    elseif i == "HandTriggerUp" then
-        return self.Controls.HandTrigger.Up
-    elseif i == "HandTriggerDown" then
-        return self.Controls.HandTrigger.Down
-    elseif i == "HandTriggerFullyUp" then
-        return self.Controls.HandTrigger.FullyUp
-    elseif i == "HandTriggerFullyDown" then
-        return self.Controls.HandTrigger.FullyDown
+    elseif i == "GripTriggerUp" then
+        return self.Controls.GripTrigger.Up
+    elseif i == "GripTriggerDown" then
+        return self.Controls.GripTrigger.Down
+    elseif i == "GripTriggerFullyUp" then
+        return self.Controls.GripTrigger.FullyUp
+    elseif i == "GripTriggerFullyDown" then
+        return self.Controls.GripTrigger.FullyDown
     elseif i == "IndexTriggerUp" then
         return self.Controls.IndexTrigger.Up
     elseif i == "IndexTriggerDown" then
@@ -95,8 +95,8 @@ function CONTROLLER_METATABLE:__index(i)
         return self.Controls.Thumbstick.EdgeEntered
     elseif i == "ThumbstickEdgeLeft" then
         return self.Controls.Thumbstick.EdgeLeft
-    elseif i == "HandTriggerChanged" then
-        return self.Controls.HandTrigger.Changed
+    elseif i == "GripTriggerChanged" then
+        return self.Controls.GripTrigger.Changed
     elseif i == "IndexTriggerChanged" then
         return self.Controls.IndexTrigger.Changed
     elseif i == "ThumbstickChanged" then
@@ -126,9 +126,9 @@ function Controller:constructor(hand, gamepadNum)
     rawset(self, "_hand", hand)
     rawset(self, "_gamepadNum", gamepadNum or getOculusControllerGamepadNum())
     rawset(self, "_controls", {
-        HandTrigger = Trigger.new(),
-        IndexTrigger = Trigger.new(),
-        Thumbstick = Thumbstick.new(),
+        GripTrigger = Trigger.new(0.9),
+        IndexTrigger = Trigger.new(0.9),
+        Thumbstick = Thumbstick.new(0.975),
         Button1 = Button.new(),
         Button2 = Button.new(),
     })
@@ -146,8 +146,8 @@ function Controller:constructor(hand, gamepadNum)
             local keyCode = inputObj.KeyCode
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
-            if keyCode == keyCodeMap.HandTrigger then
-                self.Controls.HandTrigger:UpdateTriggerAbsolute(1)
+            if keyCode == keyCodeMap.GripTrigger then
+                self.Controls.GripTrigger:UpdateTriggerAbsolute(1)
             elseif keyCode == keyCodeMap.IndexTrigger then
                 self.Controls.IndexTrigger:UpdateTriggerAbsolute(1)
             elseif keyCode == keyCodeMap.ThumbstickButton then
@@ -165,8 +165,8 @@ function Controller:constructor(hand, gamepadNum)
             local keyCode = inputObj.KeyCode
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
-            if keyCode == keyCodeMap.HandTrigger then
-                self.Controls.HandTrigger:UpdateTriggerAbsolute(0)
+            if keyCode == keyCodeMap.GripTrigger then
+                self.Controls.GripTrigger:UpdateTriggerAbsolute(0)
             elseif keyCode == keyCodeMap.IndexTrigger then
                 self.Controls.IndexTrigger:UpdateTriggerAbsolute(0)
             elseif keyCode == keyCodeMap.Thumbstick then
@@ -187,8 +187,8 @@ function Controller:constructor(hand, gamepadNum)
             local delta = inputObj.Delta
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
-            if keyCode == keyCodeMap.HandTrigger then
-                self.Controls.HandTrigger:UpdateTriggerDelta(delta.Z)
+            if keyCode == keyCodeMap.GripTrigger then
+                self.Controls.GripTrigger:UpdateTriggerDelta(delta.Z)
             elseif keyCode == keyCodeMap.IndexTrigger then
                 self.Controls.IndexTrigger:UpdateTriggerDelta(delta.Z)
             elseif keyCode == keyCodeMap.Thumbstick then

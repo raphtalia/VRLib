@@ -3,7 +3,7 @@ local Hand = require(script.Parent.Hand)
 return {
     CONTROLLER_KEYCODES = {
         [Hand.Left] = {
-            HandTrigger = Enum.KeyCode.ButtonL1,
+            GripTrigger = Enum.KeyCode.ButtonL1,
             IndexTrigger = Enum.KeyCode.ButtonL2,
             Thumbstick = Enum.KeyCode.Thumbstick1,
             ThumbstickButton = Enum.KeyCode.ButtonL3,
@@ -11,7 +11,7 @@ return {
             Button2 = Enum.KeyCode.ButtonX,
         },
         [Hand.Right] = {
-            HandTrigger = Enum.KeyCode.ButtonR1,
+            GripTrigger = Enum.KeyCode.ButtonR1,
             IndexTrigger = Enum.KeyCode.ButtonR2,
             Thumbstick = Enum.KeyCode.Thumbstick2,
             ThumbstickButton = Enum.KeyCode.ButtonR3,

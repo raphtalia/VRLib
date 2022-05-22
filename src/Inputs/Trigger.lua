@@ -9,7 +9,7 @@ function TRIGGER_METATABLE:__index(i)
     if i == "RawPosition" then
         return rawget(self, "_rawPosition")
     elseif i == "Position" then
-        if self.IsDown then
+        if self.IsFullyDown then
             return 1
         else
             return self.RawPosition
@@ -38,12 +38,14 @@ function TRIGGER_METATABLE:__newindex(i)
     error(i.. " is not a valid member of Trigger or is unassignable", 2)
 end
 
-function Trigger:constructor()
+function Trigger:constructor(threshold)
+    t.new(threshold)
+
     -- roblox-ts compatibility
     fixSuperclass(self, Trigger, TRIGGER_METATABLE)
 
     rawset(self, "_rawPosition", 0)
-    rawset(self, "_triggerThreshold", 0.9)
+    rawset(self, "_triggerThreshold", threshold or 0.95)
     rawset(self, "_isDown", false)
     rawset(self, "_isFullyDown", false)
     rawset(self, "_up", Signal.new())
@@ -53,9 +55,9 @@ function Trigger:constructor()
     rawset(self, "_changed", Signal.new())
 end
 
-function Trigger.new()
+function Trigger.new(threshold)
     local self = setmetatable({}, TRIGGER_METATABLE)
-    Trigger.constructor(self)
+    Trigger.constructor(self, threshold)
 
     return self
 end

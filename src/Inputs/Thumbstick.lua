@@ -40,12 +40,14 @@ function THUMBSTICK_METATABLE:__newindex(i)
     error(i.. " is not a valid member of Thumbstick or is unassignable", 2)
 end
 
-function Thumbstick:constructor()
+function Thumbstick:constructor(edgeThreshold)
+    t.new(edgeThreshold)
+
     -- roblox-ts compatibility
     fixSuperclass(self, Thumbstick, THUMBSTICK_METATABLE)
 
     rawset(self, "_rawLocation", Vector2.new())
-    rawset(self, "_edgeThreshold", 0.975)
+    rawset(self, "_edgeThreshold", edgeThreshold or 0.95)
     rawset(self, "_isDown", false)
     rawset(self, "_isEdge", false)
     rawset(self, "_up", Signal.new())
@@ -56,9 +58,9 @@ function Thumbstick:constructor()
     rawset(self, "_edgeLeft", Signal.new())
 end
 
-function Thumbstick.new()
+function Thumbstick.new(edgeThreshold)
     local self = setmetatable({}, THUMBSTICK_METATABLE)
-    Thumbstick.constructor(self)
+    Thumbstick.constructor(self, edgeThreshold)
 
     return self
 end
@@ -109,9 +111,9 @@ function THUMBSTICK_METATABLE:UpdateButton(isDown)
     end
 end
 
-function THUMBSTICK_METATABLE:SetEdgeThreshold(threshold)
-    t.SetThreshold(threshold)
-    rawset(self, "_edgeThreshold", threshold)
+function THUMBSTICK_METATABLE:SetEdgeThreshold(edgeThreshold)
+    t.SetThreshold(edgeThreshold)
+    rawset(self, "_edgeThreshold", edgeThreshold)
     self:UpdateLocationAbsolute(self.Location)
 end
 

@@ -1,9 +1,9 @@
 [package]
-description = "VR library for the Oculus Quest 2 headset"
+description = "VR library for Roblox"
 exclude = ["*"]
 include = ["src", "src/*", "default.project.json", "wally.toml", "LICENSE"]
 license = "MIT"
-name = "raphtalia/oculuslib"
+name = "raphtalia/vrlib"
 realm = "shared"
 registry = "https://github.com/UpliftGames/wally-index"
 version = "1.0.0"

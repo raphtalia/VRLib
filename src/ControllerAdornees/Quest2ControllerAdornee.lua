@@ -4,13 +4,13 @@
 ]]
 local RunService = game:GetService("RunService")
 
-local Hand = require(script.Parent.Hand)
-local Signal = require(script.Parent.Parent.Signal)
-local t = require(script.Parent.Types).ControllerAdornee
+local Hand = require(script.Parent.Parent.Hand)
+local Signal = require(script.Parent.Parent.Parent.Signal)
+local t = require(script.Parent.Parent.Types).ControllerAdornee
 
-local fixSuperclass = require(script.Parent.Util.fixSuperclass)
+local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
 
-local Constants = require(script.Parent.Constants)
+local Constants = require(script.Parent.Parent.Constants)
 local HAND_CONTROLLER_NAME_MAP = Constants.HAND_CONTROLLER_NAME_MAP
 
 local ControllerAdornee = {}
@@ -76,7 +76,7 @@ function ControllerAdornee:constructor(controller, controllers)
         local hand = con.Hand
 
         root.Thumbstick.CFrame = root.Thumbstick.OriginalCFrame.Value * CFrame.new(0, if con:IsThumbstickDown() then -0.005 else 0, 0) * CFrame.Angles(math.rad(con.ThumbstickLocation.Y * 20), 0, math.rad(con.ThumbstickLocation.X * 20))
-        root.HandTrigger.CFrame = root.HandTrigger.OriginalCFrame.Value * CFrame.new(0, -con.HandTriggerPosition * 0.015, 0)
+        root.HandTrigger.CFrame = root.HandTrigger.OriginalCFrame.Value * CFrame.new(0, -con.GripTriggerPosition * 0.015, 0)
         root.IndexTrigger.CFrame = root.IndexTrigger.OriginalCFrame.Value * CFrame.Angles(math.rad(con.IndexTriggerPosition * 20), 0, 0)
 
         if hand == Hand.Left then
