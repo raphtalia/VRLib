@@ -6,6 +6,10 @@ local Signal = require(script.Parent.Parent.Signal)
 local Promise = require(script.Parent.Parent.Promise)
 local t = require(script.Parent.Types).Controller
 
+local Button = require(script.Button)
+local Thumbstick = require(script.Thumbstick)
+local Trigger = require(script.Trigger)
+
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 
 local Constants = require(script.Parent.Constants)
@@ -47,42 +51,56 @@ function CONTROLLER_METATABLE:__index(i)
         return rawget(self, "_hand")
     elseif i == "GamepadNum" then
         return rawget(self, "_gamepadNum")
+    elseif i == "Controls" then
+        return rawget(self, "_controls")
     elseif i == "HandTriggerPosition" then
-        return rawget(self, "_handTriggerPosition")
+        return self.Controls.HandTrigger.Position
     elseif i == "IndexTriggerPosition" then
-        return rawget(self, "_indexTriggerPosition")
+        return self.Controls.IndexTrigger.Position
     elseif i == "ThumbstickLocation" then
-        return rawget(self, "_thumbstickLocation")
+        return self.Controls.Thumbstick.Location
     elseif i == "VibrationValue" then
         return HapticService:GetMotor(self.GamepadNum, HAND_VIBRATION_MOTOR_MAP[self.Hand])
     elseif i == "Button1Down" then
-        return rawget(self, "_button1Down")
+        return self.Controls.Button1.Down
     elseif i == "Button1Up" then
-        return rawget(self, "_button1Up")
+        return self.Controls.Button1.Up
     elseif i == "Button2Down" then
-        return rawget(self, "_button2Down")
+        return self.Controls.Button2.Down
     elseif i == "Button2Up" then
-        return rawget(self, "_button2Up")
+        return self.Controls.Button2.Up
     elseif i == "HandTriggerUp" then
-        return rawget(self, "_handTriggerUp")
+        return self.Controls.HandTrigger.Up
     elseif i == "HandTriggerDown" then
-        return rawget(self, "_handTriggerDown")
+        return self.Controls.HandTrigger.Down
+    elseif i == "HandTriggerFullyUp" then
+        return self.Controls.HandTrigger.FullyUp
+    elseif i == "HandTriggerFullyDown" then
+        return self.Controls.HandTrigger.FullyDown
     elseif i == "IndexTriggerUp" then
-        return rawget(self, "_indexTriggerUp")
+        return self.Controls.IndexTrigger.Up
     elseif i == "IndexTriggerDown" then
-        return rawget(self, "_indexTriggerDown")
+        return self.Controls.IndexTrigger.Down
+    elseif i == "IndexTriggerFullyUp" then
+        return self.Controls.IndexTrigger.FullyUp
+    elseif i == "IndexTriggerFullyDown" then
+        return self.Controls.IndexTrigger.FullyDown
     elseif i == "ThumbstickUp" then
-        return rawget(self, "_thumbstickUp")
+        return self.Controls.Thumbstick.Up
     elseif i == "ThumbstickDown" then
-        return rawget(self, "_thumbstickDown")
+        return self.Controls.Thumbstick.Down
     elseif i == "ThumbstickReleased" then
-        return rawget(self, "_thumbstickReleased")
+        return self.Controls.Thumbstick.Released
+    elseif i == "ThumbstickEdgeEntered" then
+        return self.Controls.Thumbstick.EdgeEntered
+    elseif i == "ThumbstickEdgeLeft" then
+        return self.Controls.Thumbstick.EdgeLeft
     elseif i == "HandTriggerChanged" then
-        return rawget(self, "_handTriggerChanged")
+        return self.Controls.HandTrigger.Changed
     elseif i == "IndexTriggerChanged" then
-        return rawget(self, "_indexTriggerChanged")
+        return self.Controls.IndexTrigger.Changed
     elseif i == "ThumbstickChanged" then
-        return rawget(self, "_thumbstickChanged")
+        return self.Controls.Thumbstick.Changed
     elseif i == "Destroying" then
         return rawget(self, "_destroying")
     else
@@ -107,23 +125,13 @@ function Controller:constructor(hand, gamepadNum)
     rawset(self, "_velocity", Vector3.new())
     rawset(self, "_hand", hand)
     rawset(self, "_gamepadNum", gamepadNum or getOculusControllerGamepadNum())
-    rawset(self, "_handTriggerPosition", 0)
-    rawset(self, "_indexTriggerPosition", 0)
-    rawset(self, "_thumbstickLocation", Vector2.new(0, 0))
-    rawset(self, "_button1Down", Signal.new())
-    rawset(self, "_button1Up", Signal.new())
-    rawset(self, "_button2Down", Signal.new())
-    rawset(self, "_button2Up", Signal.new())
-    rawset(self, "_handTriggerUp", Signal.new())
-    rawset(self, "_handTriggerDown", Signal.new())
-    rawset(self, "_indexTriggerUp", Signal.new())
-    rawset(self, "_indexTriggerDown", Signal.new())
-    rawset(self, "_thumbstickUp", Signal.new())
-    rawset(self, "_thumbstickDown", Signal.new())
-    rawset(self, "_thumbstickReleased", Signal.new())
-    rawset(self, "_handTriggerChanged", Signal.new())
-    rawset(self, "_indexTriggerChanged", Signal.new())
-    rawset(self, "_thumbstickChanged", Signal.new())
+    rawset(self, "_controls", {
+        HandTrigger = Trigger.new(),
+        IndexTrigger = Trigger.new(),
+        Thumbstick = Thumbstick.new(),
+        Button1 = Button.new(),
+        Button2 = Button.new(),
+    })
     rawset(self, "_destroying", Signal.new())
 
     local lastUserPos = self.Position
@@ -138,26 +146,16 @@ function Controller:constructor(hand, gamepadNum)
             local keyCode = inputObj.KeyCode
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
-            --[[
-                TODO: Check if InputBegan and InputEnded for triggers should have custom implementations to allow for
-                custom tolerances (not sure if trigger failing to fully depress is an isolated problem or not)
-            ]]
             if keyCode == keyCodeMap.HandTrigger then
-                local delta = 1 - self.HandTriggerPosition
-                rawset(self, "_handTriggerPosition", 1)
-                self.HandTriggerDown:Fire()
-                self.HandTriggerChanged:Fire(self.HandTriggerPosition, delta)
+                self.Controls.HandTrigger:UpdateTriggerAbsolute(1)
             elseif keyCode == keyCodeMap.IndexTrigger then
-                local delta = 1 - self.IndexTriggerPosition
-                rawset(self, "_indexTriggerPosition", 1)
-                self.IndexTriggerDown:Fire()
-                self.IndexTriggerChanged:Fire(self.IndexTriggerPosition, delta)
+                self.Controls.IndexTrigger:UpdateTriggerAbsolute(1)
             elseif keyCode == keyCodeMap.ThumbstickButton then
-                self.ThumbstickDown:Fire()
+                self.Controls.Thumbstick:UpdateButton(true)
             elseif keyCode == keyCodeMap.Button1 then
-                self.Button1Down:Fire()
+                self.Controls.Button1:UpdateButton(true)
             elseif keyCode == keyCodeMap.Button2 then
-                self.Button2Down:Fire()
+                self.Controls.Button2:UpdateButton(true)
             end
         end
     end))
@@ -168,26 +166,17 @@ function Controller:constructor(hand, gamepadNum)
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
             if keyCode == keyCodeMap.HandTrigger then
-                local delta = -self.HandTriggerPosition
-                rawset(self, "_handTriggerPosition", 0)
-                self.HandTriggerUp:Fire()
-                self.HandTriggerChanged:Fire(self.HandTriggerPosition, delta)
+                self.Controls.HandTrigger:UpdateTriggerAbsolute(0)
             elseif keyCode == keyCodeMap.IndexTrigger then
-                local delta = -self.IndexTriggerPosition
-                rawset(self, "_indexTriggerPosition", 0)
-                self.IndexTriggerUp:Fire()
-                self.IndexTriggerChanged:Fire(self.IndexTriggerPosition, delta)
+                self.Controls.IndexTrigger:UpdateTriggerAbsolute(0)
             elseif keyCode == keyCodeMap.Thumbstick then
-                local delta = -self.ThumbstickLocation
-                rawset(self, "_thumbstickLocation", Vector2.new(0, 0))
-                self.ThumbstickReleased:Fire()
-                self.ThumbstickChanged:Fire(self.ThumbstickLocation, delta)
+                self.Controls.Thumbstick:UpdateLocationAbsolute(Vector2.new())
             elseif keyCode == keyCodeMap.ThumbstickButton then
-                self.ThumbstickUp:Fire()
+                self.Controls.Thumbstick:UpdateButton(false)
             elseif keyCode == keyCodeMap.Button1 then
-                self.Button1Up:Fire()
+                self.Controls.Button1:UpdateButton(false)
             elseif keyCode == keyCodeMap.Button2 then
-                self.Button2Up:Fire()
+                self.Controls.Button2:UpdateButton(false)
             end
         end
     end))
@@ -199,15 +188,11 @@ function Controller:constructor(hand, gamepadNum)
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
             if keyCode == keyCodeMap.HandTrigger then
-                rawset(self, "_handTriggerPosition", rawget(self, "_handTriggerPosition") + delta.Z)
-                self.HandTriggerChanged:Fire(self.HandTriggerPosition, delta.Z)
+                self.Controls.HandTrigger:UpdateTriggerDelta(delta.Z)
             elseif keyCode == keyCodeMap.IndexTrigger then
-                rawset(self, "_indexTriggerPosition", rawget(self, "_indexTriggerPosition") + delta.Z)
-                self.IndexTriggerChanged:Fire(self.IndexTriggerPosition, delta.Z)
+                self.Controls.IndexTrigger:UpdateTriggerDelta(delta.Z)
             elseif keyCode == keyCodeMap.Thumbstick then
-                local vec2Delta = Vector2.new(delta.X, delta.Y)
-                rawset(self, "_thumbstickLocation", rawget(self, "_thumbstickLocation") + vec2Delta)
-                self.ThumbstickChanged:Fire(self.ThumbstickLocation, vec2Delta)
+                self.Controls.Thumbstick:UpdateLocationDelta(Vector2.new(delta.X, delta.Y))
             end
         end
     end))

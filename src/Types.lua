@@ -53,4 +53,39 @@ return {
             }))(controller, controllers))
         end,
     },
+    Button = {
+        UpdateButton = function(isDown)
+            assert(t.boolean(isDown))
+        end,
+    },
+    Thumbstick = {
+        UpdateLocationAbsolute = function(loc)
+            assert(t.Vector2(loc))
+        end,
+
+        UpdateLocationDelta = function(delta)
+            assert(t.Vector2(delta))
+        end,
+
+        UpdateButton = function(isDown)
+            assert(t.boolean(isDown))
+        end,
+
+        SetEdgeThreshold = function(threshold)
+            assert(t.numberConstrainedExclusive(0, 1)(threshold))
+        end,
+    },
+    Trigger = {
+        UpdateTriggerAbsolute = function(pos)
+            assert(t.number(pos))
+        end,
+
+        UpdateTriggerDelta = function(delta)
+            assert(t.number(delta))
+        end,
+
+        SetTriggerThreshold = function(threshold)
+            assert(t.numberConstrainedExclusive(0, 1)(threshold))
+        end,
+    },
 }
