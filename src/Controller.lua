@@ -138,6 +138,10 @@ function Controller:constructor(hand, gamepadNum)
             local keyCode = inputObj.KeyCode
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
+            --[[
+                TODO: Check if InputBegan and InputEnded for triggers should have custom implementations to allow for
+                custom tolerances (not sure if trigger failing to fully depress is an isolated problem or not)
+            ]]
             if keyCode == keyCodeMap.HandTrigger then
                 local delta = 1 - self.HandTriggerPosition
                 rawset(self, "_handTriggerPosition", 1)

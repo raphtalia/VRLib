@@ -2,6 +2,7 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local Signal = require(script.Parent.Parent.Signal)
+local t = require(script.Parent.Types).Headset
 
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 
@@ -12,6 +13,8 @@ function HEADSET_METATABLE:__index(i)
         return UserInputService:GetUserCFrame(Enum.UserCFrame.Head)
     elseif i == "Position" then
         return self.CFrame.Position
+    elseif i == "Height" then
+        return rawget(self, "_height")
     elseif i == "Velocity" then
         return rawget(self, "_velocity")
     elseif i == "Destroying" then
@@ -20,14 +23,20 @@ function HEADSET_METATABLE:__index(i)
         return HEADSET_METATABLE[i] or error(i.. " is not a valid member of Headset", 2)
     end
 end
-function HEADSET_METATABLE:__newindex(i)
-    error(i.. " is not a valid member of Headset or is unassignable", 2)
+function HEADSET_METATABLE:__newindex(i, v)
+    if i == "Height" then
+        t.Height(v)
+        rawset(self, "_height", v)
+    else
+        error(i.. " is not a valid member of Headset or is unassignable", 2)
+    end
 end
 
 function Headset:constructor()
     -- roblox-ts compatibility
     fixSuperclass(self, Headset, HEADSET_METATABLE)
 
+    rawset(self, "_height", 5)
     rawset(self, "_velocity", Vector3.new())
     rawset(self, "_destroying", Signal.new())
 
@@ -55,8 +64,14 @@ function HEADSET_METATABLE:Recenter()
     UserInputService:RecenterUserHeadCFrame()
 end
 
-function HEADSET_METATABLE:MoveTo(cframe)
-    workspace.CurrentCamera.CFrame = cframe
+function HEADSET_METATABLE:MoveTo(cf, addHeight)
+    t.MoveTo(cf, addHeight)
+
+    if typeof(cf) == "Vector3" then
+        cf = CFrame.new(cf)
+    end
+
+    workspace.CurrentCamera.CFrame = CFrame.new(0, if addHeight then self.Height else 0, 0) * cf
 end
 
 -- roblox-ts compatability

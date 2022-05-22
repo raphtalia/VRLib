@@ -15,7 +15,13 @@ local ControllerInterface = t.interface(Controller)
 
 return {
     Headset = {
+        Height = function(v)
+            assert(t.numberPositive(v))
+        end,
 
+        MoveTo = function(cf, addHeight)
+            assert(t.tuple(t.union(t.CFrame, t.Vector3), t.optional(t.boolean))(cf, addHeight))
+        end,
     },
     Controller = {
         Hand = function(v)
