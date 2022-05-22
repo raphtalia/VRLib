@@ -125,13 +125,13 @@ function Controller:constructor(hand, gamepadNum)
     rawset(self, "_velocity", Vector3.new())
     rawset(self, "_hand", hand)
     rawset(self, "_gamepadNum", gamepadNum or getOculusControllerGamepadNum())
-    rawset(self, "_controls", {
+    rawset(self, "_controls", table.freeze({
         GripTrigger = Trigger.new(0.9),
         IndexTrigger = Trigger.new(0.9),
         Thumbstick = Thumbstick.new(0.975),
         Button1 = Button.new(),
         Button2 = Button.new(),
-    })
+    }))
     rawset(self, "_destroying", Signal.new())
 
     local lastUserPos = self.Position
@@ -198,9 +198,9 @@ function Controller:constructor(hand, gamepadNum)
     end))
 end
 
-function Controller.new(hand)
+function Controller.new(hand, gamepadNum)
     local self = setmetatable({}, CONTROLLER_METATABLE)
-    Controller.constructor(self, hand)
+    Controller.constructor(self, hand, gamepadNum)
 
     return self
 end
