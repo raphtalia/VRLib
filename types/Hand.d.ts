@@ -1,4 +1,4 @@
 export enum Hand {
-	LEFT = "Left",
-	RIGHT = "Right",
+	Left = "Left",
+	Right = "Right",
 }

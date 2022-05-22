@@ -7,7 +7,7 @@ export default class Quest2ControllerAdornee {
 	public readonly RootPart: BasePart;
 	public readonly Destroying: RBXScriptSignal;
 
-	public constructor();
+	public constructor(controller: Quest2Controller, controllers: Instance);
 
 	public Destroy(): void;
 }
