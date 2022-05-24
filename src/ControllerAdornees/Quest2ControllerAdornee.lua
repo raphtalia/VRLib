@@ -1,14 +1,9 @@
---[[
-    game.StarterGui:SetCore("VRLaserPointerMode", 0)
-    game.StarterGui:SetCore("VREnableControllerModels", false)
-]]
-local RunService = game:GetService("RunService")
-
 local Hand = require(script.Parent.Parent.Hand)
 local Signal = require(script.Parent.Parent.Parent.Signal)
 local t = require(script.Parent.Parent.Types).ControllerAdornee
 
 local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
+local bindToRenderStep = require(script.Parent.Parent.Util.bindToRenderStep)
 
 local Constants = require(script.Parent.Parent.Constants)
 local HAND_CONTROLLER_NAME_MAP = Constants.HAND_CONTROLLER_NAME_MAP
@@ -57,16 +52,16 @@ function ControllerAdornee:constructor(controller, controllers)
     rawset(self, "_model", model)
     rawset(self, "_destroying", Signal.new())
 
-    rawset(self, "HeartbeatConnection", RunService.Heartbeat:Connect(function()
+    rawset(self, "RenderStepDisconnect", bindToRenderStep(Enum.RenderPriority.Character.Value, function()
         -- Moving the controllers to their virtual position relative to camera
         local adorneeModel = self.Model
-        local oldCF = adorneeModel:GetPivot()
-        local newCF = camera.CFrame * self.Controller.CFrame
+        -- local oldCF = adorneeModel:GetPivot()
+        local newCF = self.Controller.WorldCFrame
 
-        if (newCF.Position - oldCF.Position).Magnitude < 1 then
-            -- Reduces jitter
-            newCF = oldCF:Lerp(newCF, 0.2)
-        end
+        -- if (newCF.Position - oldCF.Position).Magnitude < 1 then
+        --     -- Reduces jitter
+        --     newCF = oldCF:Lerp(newCF, 0.2)
+        -- end
 
         adorneeModel:PivotTo(newCF)
 
@@ -99,7 +94,7 @@ end
 
 function CONTROLLER_ADORNEE_METATABLE:Destroy()
     self.Destroying:Fire()
-    rawget(self, "HeartbeatConnection"):Disconnect()
+    rawget(self, "RenderStepDisconnect")()
 end
 
 -- roblox-ts compatability

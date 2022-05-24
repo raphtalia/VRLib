@@ -23,6 +23,10 @@ return {
         [Hand.Left] = Enum.UserCFrame.LeftHand,
         [Hand.Right] = Enum.UserCFrame.RightHand,
     },
+    HAND_VR_TOUCHPAD_MAP = {
+        [Hand.Left] = Enum.VRTouchpad.Left,
+        [Hand.Right] = Enum.VRTouchpad.Right,
+    },
     HAND_VIBRATION_MOTOR_MAP = {
         [Hand.Left] = Enum.VibrationMotor.LeftHand,
         [Hand.Right] = Enum.VibrationMotor.RightHand,

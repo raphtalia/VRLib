@@ -2,9 +2,15 @@ local t = require(script.Parent.Parent.t)
 
 local Hand = require(script.Parent.Hand)
 
+local Headset = {
+    UserCFrame = t.CFrame,
+    UserPosition = t.Vector3,
+    Velocity = t.Vector3,
+}
+local HeadsetInterface = t.interface(Headset)
 local Controller = {
-    CFrame = t.CFrame,
-    Position = t.Vector3,
+    UserCFrame = t.CFrame,
+    UserPosition = t.Vector3,
     Velocity = t.Vector3,
     GamepadNum = t.enum(Enum.UserInputType),
     GripTriggerPosition = t.number,
@@ -16,13 +22,7 @@ local Threshold = t.numberConstrainedExclusive(0, 1)
 
 return {
     Headset = {
-        Height = function(v)
-            assert(t.numberPositive(v))
-        end,
 
-        MoveTo = function(cf, addHeight)
-            assert(t.tuple(t.union(t.CFrame, t.Vector3), t.optional(t.boolean))(cf, addHeight))
-        end,
     },
     Controller = {
         Hand = function(v)
@@ -95,6 +95,56 @@ return {
 
         SetTriggerThreshold = function(threshold)
             assert(Threshold(threshold))
+        end,
+    },
+    VRCamera = {
+        Headset = function(v)
+            assert(HeadsetInterface(v))
+        end,
+
+        Height = function(v)
+            assert(t.number(v))
+        end,
+
+        WorldCFrame = function(v)
+            assert(t.CFrame(v))
+        end,
+
+        WorldPosition = function(v)
+            assert(t.Vector3(v))
+        end,
+
+        HeadCFrame = function(v)
+            assert(t.CFrame(v))
+        end,
+
+        HeadPosition = function(v)
+            assert(t.Vector3(v))
+        end,
+
+        new = function(headset)
+            assert(HeadsetInterface(headset))
+        end,
+    },
+    LaserPointer = {
+        Controller = function(v)
+            assert(ControllerInterface(v))
+        end,
+
+        Length = function(v)
+            assert(t.numberPositive(v))
+        end,
+
+        Visible = function(v)
+            assert(t.boolean(v))
+        end,
+
+        RaycastParams = function(v)
+            assert(t.RaycastParams(v))
+        end,
+
+        new = function(controller)
+            assert(ControllerInterface(controller))
         end,
     },
 }

@@ -1,20 +1,19 @@
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local VRService = game:GetService("VRService")
 
 local Signal = require(script.Parent.Parent.Signal)
-local t = require(script.Parent.Types).Headset
+-- local t = require(script.Parent.Types).Headset
 
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
+local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
 
 local Headset = {}
 local HEADSET_METATABLE = {}
 function HEADSET_METATABLE:__index(i)
-    if i == "CFrame" then
+    if i == "UserCFrame" then
         return UserInputService:GetUserCFrame(Enum.UserCFrame.Head)
-    elseif i == "Position" then
-        return self.CFrame.Position
-    elseif i == "Height" then
-        return rawget(self, "_height")
+    elseif i == "UserPosition" then
+        return self.UserCFrame.Position
     elseif i == "Velocity" then
         return rawget(self, "_velocity")
     elseif i == "Destroying" then
@@ -23,26 +22,24 @@ function HEADSET_METATABLE:__index(i)
         return HEADSET_METATABLE[i] or error(i.. " is not a valid member of Headset", 2)
     end
 end
-function HEADSET_METATABLE:__newindex(i, v)
-    if i == "Height" then
-        t.Height(v)
-        rawset(self, "_height", v)
-    else
-        error(i.. " is not a valid member of Headset or is unassignable", 2)
-    end
+function HEADSET_METATABLE:__newindex(i)
+    error(i.. " is not a valid member of Headset or is unassignable", 2)
 end
 
 function Headset:constructor()
     -- roblox-ts compatibility
     fixSuperclass(self, Headset, HEADSET_METATABLE)
 
-    rawset(self, "_height", 5)
+    if not VRService:GetUserCFrameEnabled(Enum.UserCFrame.Head) then
+        error("Headset not detected", 2)
+    end
+
     rawset(self, "_velocity", Vector3.new())
     rawset(self, "_destroying", Signal.new())
 
-    local lastUserPos = self.Position
-    rawset(self, "HeartbeatConnection", RunService.Heartbeat:Connect(function(dt)
-        local userPos = self.Position
+    local lastUserPos = self.UserPosition
+    rawset(self, "RenderStepDisconnect", bindToRenderStep(Enum.RenderPriority.Input.Value, function(dt)
+        local userPos = self.UserPosition
         rawset(self, "_velocity", (userPos - lastUserPos) / dt)
         lastUserPos = userPos
     end))
@@ -57,21 +54,11 @@ end
 
 function HEADSET_METATABLE:Destroy()
     self.Destroying:Fire()
-    rawget(self, "HeartbeatConnection"):Disconnect()
+    rawget(self, "RenderStepDisconnect")()
 end
 
 function HEADSET_METATABLE:Recenter()
     UserInputService:RecenterUserHeadCFrame()
-end
-
-function HEADSET_METATABLE:MoveTo(cf, addHeight)
-    t.MoveTo(cf, addHeight)
-
-    if typeof(cf) == "Vector3" then
-        cf = CFrame.new(cf)
-    end
-
-    workspace.CurrentCamera.CFrame = CFrame.new(0, if addHeight then self.Height else 0, 0) * cf
 end
 
 -- roblox-ts compatability

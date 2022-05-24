@@ -7,6 +7,10 @@ local VRLib = {
     ControllerAdornees = {
         Quest2 = require(script.ControllerAdornees.Quest2ControllerAdornee)
     },
+    VRCamera = require(script.VRCamera),
+    LaserPointer = require(script.LaserPointer),
+
+    waitForUserCFrameAsync = require(script.Util.waitForUserCFrameAsync)
 }
 
 return VRLib

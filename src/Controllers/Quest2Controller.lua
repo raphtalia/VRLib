@@ -1,6 +1,6 @@
-local RunService = game:GetService("RunService")
-local HapticService = game:GetService("HapticService")
 local UserInputService = game:GetService("UserInputService")
+local HapticService = game:GetService("HapticService")
+local VRService = game:GetService("VRService")
 
 local Signal = require(script.Parent.Parent.Parent.Signal)
 local Promise = require(script.Parent.Parent.Parent.Promise)
@@ -11,11 +11,13 @@ local Thumbstick = require(script.Parent.Parent.Inputs.Thumbstick)
 local Trigger = require(script.Parent.Parent.Inputs.Trigger)
 
 local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
+local bindToRenderStep = require(script.Parent.Parent.Util.bindToRenderStep)
 
 local Constants = require(script.Parent.Parent.Constants)
 local CONTROLLER_KEYCODES = Constants.CONTROLLER_KEYCODES
 local HAND_VIBRATION_MOTOR_MAP = Constants.HAND_VIBRATION_MOTOR_MAP
 local HAND_USER_CFRAME_MAP = Constants.HAND_USER_CFRAME_MAP
+local HAND_VR_TOUCHPAD_MAP = Constants.HAND_VR_TOUCHPAD_MAP
 
 -- Doesn't filter out all controllers but better than assuming its just Gamepad1
 local function getOculusControllerGamepadNum()
@@ -36,21 +38,36 @@ local function getOculusControllerGamepadNum()
             return gamepadNum
         end
     end
+
+    -- Return Gamepad1 if we couldn't find a controller
+    return Enum.UserInputType.Gamepad1
 end
 
 local Controller = {}
 local CONTROLLER_METATABLE = {}
 function CONTROLLER_METATABLE:__index(i)
-    if i == "CFrame" then
+    if i == "UserCFrame" then
         return UserInputService:GetUserCFrame(HAND_USER_CFRAME_MAP[self.Hand])
-    elseif i == "Position" then
-        return self.CFrame.Position
+    elseif i == "UserPosition" then
+        return self.UserCFrame.Position
+    elseif i == "WorldCFrame" then
+        local camera = workspace.CurrentCamera
+
+        if camera.HeadLocked then
+            return camera.CFrame * self.UserCFrame
+        else
+            return camera:GetRenderCFrame() * UserInputService:GetUserCFrame(Enum.UserCFrame.Head):Inverse() * self.UserCFrame
+        end
+    elseif i == "WorldPosition" then
+        return self.WorldCFrame.Position
     elseif i == "Velocity" then
         return rawget(self, "_velocity")
     elseif i == "Hand" then
         return rawget(self, "_hand")
     elseif i == "GamepadNum" then
         return rawget(self, "_gamepadNum")
+    elseif i == "TouchpadMode" then
+        return VRService:GetTouchpadMode(HAND_VR_TOUCHPAD_MAP[self.Hand])
     elseif i == "Controls" then
         return rawget(self, "_controls")
     elseif i == "GripTriggerPosition" then
@@ -111,6 +128,9 @@ function CONTROLLER_METATABLE:__newindex(i, v)
     if i == "GamepadNum" then
         t.GamepadNum(v)
         rawset(self, "_gamepadNum", v)
+    elseif i == "TouchpadMode" then
+        t.TouchpadMode(v)
+        VRService:SetTouchpadMode(HAND_VR_TOUCHPAD_MAP[self.Hand], v)
     else
         error(i.. " is not a valid member of Controller or is unassignable", 2)
     end
@@ -118,6 +138,10 @@ end
 
 function Controller:constructor(hand, gamepadNum)
     t.new(hand, gamepadNum)
+
+    if not VRService:GetUserCFrameEnabled(HAND_USER_CFRAME_MAP[hand]) then
+        error(hand.Name.. " Controller not detected", 2)
+    end
 
     -- roblox-ts compatibility
     fixSuperclass(self, Controller, CONTROLLER_METATABLE)
@@ -134,9 +158,9 @@ function Controller:constructor(hand, gamepadNum)
     }))
     rawset(self, "_destroying", Signal.new())
 
-    local lastUserPos = self.Position
-    rawset(self, "HeartbeatConnection", RunService.Heartbeat:Connect(function(dt)
-        local userPos = self.Position
+    local lastUserPos = self.UserPosition
+    rawset(self, "RenderStepDisconnect", bindToRenderStep(Enum.RenderPriority.Input.Value, function(dt)
+        local userPos = self.UserPosition
         rawset(self, "_velocity", (userPos - lastUserPos) / dt)
         lastUserPos = userPos
     end))
@@ -207,7 +231,7 @@ end
 
 function CONTROLLER_METATABLE:Destroy()
     self.Destroying:Fire()
-    rawget(self, "HeartbeatConnection"):Disconnect()
+    rawget(self, "RenderStepDisconnect")()
     rawget(self, "InputBeganConnection"):Disconnect()
     rawget(self, "InputEndedConnection"):Disconnect()
     rawget(self, "InputChangedConnection"):Disconnect()

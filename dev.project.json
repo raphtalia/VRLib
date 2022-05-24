@@ -1,15 +1,39 @@
 {
-  "name": "VRLib - Dev",
-  "tree": {
-    "$className": "DataModel",
+	"name": "VRLib - Dev",
+	"tree": {
+		"$className": "DataModel",
 
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
 
-      "Packages": {
-        "$path": "Packages",
-        "VRLib": { "$path": "." }
-      }
-    }
-  }
+			"Packages": {
+				"$path": "Packages",
+
+				"VRLib": { "$path": "." }
+			}
+		},
+
+		"Players": {
+			"$className": "Players",
+			"$properties": {
+				"CharacterAutoLoads": false
+			}
+		},
+
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+
+			"StarterPlayerScripts": {
+				"$className": "StarterPlayerScripts",
+
+				"MovementController": {
+					"$path": "example/MovementController.client.lua"
+				},
+
+				"PlayerScriptsLoader": {
+					"$className": "LocalScript"
+				}
+			}
+		}
+	}
 }

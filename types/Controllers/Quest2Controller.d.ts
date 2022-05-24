@@ -5,9 +5,12 @@ import Trigger from "../Inputs/Trigger";
 import VRDevice from "../VRDevice";
 
 export default class Quest2Controller extends VRDevice {
-	private HeartbeatConnection: RBXScriptConnection;
+	private RenderStepDisconnect: Callback;
+	public readonly UserCFrame: CFrame;
+	public readonly UserPosition: Vector3;
 	public readonly Hand: Hand;
 	public GamepadNum: Enum.UserInputType;
+	public TouchpadMode: Enum.VRTouchpadMode;
 	public readonly Controls: {
 		GripTrigger: Trigger;
 		IndexTrigger: Trigger;
