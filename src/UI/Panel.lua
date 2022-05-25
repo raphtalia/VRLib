@@ -1,5 +1,4 @@
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
 
 local TrackingBehavior = require(script.Parent.TrackingBehavior)
 local Signal = require(script.Parent.Parent.Parent.Signal)
