@@ -23,8 +23,8 @@ rightLaser.Visible = false
 leftController.ThumbstickChanged:Connect(function(loc)
     -- Without this check NaN values will be written to VRCamera
     if loc.Magnitude > 0 then
-        local moveDir = vrCamera.HeadCFrame:VectorToWorldSpace(Vector3.new(loc.X, 0, -loc.Y))
-        vrCamera.WorldPosition += Vector3.new(moveDir.X, 0, moveDir.Z).Unit * loc.Magnitude * 0.5
+        local frontDir = vrCamera.HeadCFrame:VectorToWorldSpace(Vector3.new(loc.X, 0, -loc.Y))
+        vrCamera.WorldPosition += Vector3.new(frontDir.X, 0, frontDir.Z).Unit * loc.Magnitude * 0.5
     end
 end)
 

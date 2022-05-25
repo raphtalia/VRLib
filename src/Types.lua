@@ -1,6 +1,7 @@
 local t = require(script.Parent.Parent.t)
 
 local Hand = require(script.Parent.Hand)
+local TrackingBehavior = require(script.Parent.UI.TrackingBehavior)
 
 local Headset = {
     UserCFrame = t.CFrame,
@@ -147,4 +148,25 @@ return {
             assert(ControllerInterface(controller))
         end,
     },
+    Panel = {
+        CFrame = function(v)
+            assert(t.CFrame(v))
+        end,
+
+        Position = function(v)
+            assert(t.Vector3(v))
+        end,
+
+        Size = function(v)
+            assert(t.Vector2(v))
+        end,
+
+        TrackingBehavior = function(v)
+            assert(TrackingBehavior:BelongsTo(v), "Expected TrackingBehavior EnumItem")
+        end,
+
+        DelayedTracking = function(v)
+            assert(t.boolean(v))
+        end,
+    }
 }

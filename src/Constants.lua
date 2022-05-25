@@ -35,4 +35,5 @@ return {
         [Hand.Left] = "LController",
         [Hand.Right] = "RController",
     },
+    MIN_PART_SIZE = 0.001,
 }

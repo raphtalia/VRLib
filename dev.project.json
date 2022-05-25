@@ -30,6 +30,10 @@
 					"$path": "example/MovementController.client.lua"
 				},
 
+				"UIExample": {
+					"$path": "example/UIExample.client.lua"
+				},
+
 				"PlayerScriptsLoader": {
 					"$className": "LocalScript"
 				}
