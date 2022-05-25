@@ -61,7 +61,7 @@ function LaserPointer:constructor(controller)
     rootPart.CanCollide = false
     rootPart.CanQuery = false
     rootPart.CanTouch = false
-    rootPart.Anchored = false
+    rootPart.Anchored = true
     local attachment0 = Instance.new("Attachment")
     attachment0.CFrame = CFrame.new(0, 0, -0.1)
     attachment0.Parent = rootPart
