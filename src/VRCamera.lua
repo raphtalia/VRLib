@@ -3,6 +3,7 @@ local t = require(script.Parent.Types).VRCamera
 
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
+local setCFramePos = require(script.Parent.Util.setCFramePos)
 
 --[=[
     @class VRCamera
@@ -84,7 +85,7 @@ function VR_CAMERA_METATABLE:__newindex(i, v)
         rawset(self, "_worldCFrame", v)
     elseif i == "WorldPosition" then
         t.WorldPosition(v)
-        self.WorldCFrame = CFrame.new(v - self.WorldPosition) * self.WorldCFrame
+        self.WorldCFrame = setCFramePos(v, self.WorldCFrame)
     elseif i == "HeadCFrame" then
         t.HeadCFrame(v)
         -- TODO: Implement

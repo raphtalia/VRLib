@@ -7,6 +7,7 @@ local t = require(script.Parent.Parent.Types).Panel
 
 local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
 local bindToRenderStep = require(script.Parent.Parent.Util.bindToRenderStep)
+local setCFramePos = require(script.Parent.Parent.Util.setCFramePos)
 
 local Constants = require(script.Parent.Parent.Constants)
 local MIN_PART_SIZE = Constants.MIN_PART_SIZE
@@ -68,7 +69,7 @@ function PANEL_METATABLE:__newindex(i, v)
         rawset(self, "_cframe", v)
     elseif i == "Position" then
         t.Position(v)
-        self.CFrame = CFrame.new(v - self.Position) * self.CFrame
+        self.CFrame = setCFramePos(v, self.CFrame)
     elseif i == "Size" then
         t.Size(v)
         self.RootPart.Size = Vector3.new(v.X, v.Y, MIN_PART_SIZE)
