@@ -35,6 +35,10 @@ local function isPartInViewport(part)
     return true
 end
 
+--[=[
+    @class Panel
+    WIP expansion for UI support, documentation to come
+]=]
 local Panel = {}
 local PANEL_METATABLE = {}
 function PANEL_METATABLE:__index(i)

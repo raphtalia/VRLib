@@ -6,22 +6,63 @@ local t = require(script.Parent.Types).LaserPointer
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
 
+--[=[
+    @class LaserPointer
+]=]
 local LaserPointer = {}
 local LASER_POINTER_METATABLE = {}
 function LASER_POINTER_METATABLE:__index(i)
     if i == "Controller" then
+        --[=[
+            @within LaserPointer
+            @prop Controller Quest2Controller
+            Reference to the controller that the laser pointer is tracking.
+        ]=]
         return rawget(self, "_controller")
     elseif i == "RootPart" then
+        --[=[
+            @within LaserPointer
+            @readonly
+            @prop RootPart BasePart
+            The container for the effects of the laser pointer.
+        ]=]
         return rawget(self, "_rootPart")
     elseif i == "Length" then
+        --[=[
+            @within LaserPointer
+            @prop Length number
+            The length of the laser pointer.
+        ]=]
         return rawget(self, "_length")
     elseif i == "Visible" then
+        --[=[
+            @within LaserPointer
+            @prop Visible boolean
+            Whether the laser pointer is visible.
+        ]=]
         return self.RootPart.Laser.Enabled
     elseif i == "RaycastParams" then
+        --[=[
+            @within LaserPointer
+            @prop RaycastParams RaycastParams
+            The parameters used to raycast with.
+        ]=]
         return rawget(self, "_raycastParams")
     elseif i == "RaycastResult" then
+        --[=[
+            @within LaserPointer
+            @readonly
+            @prop RaycastResult RaycastResult
+            The result of the last raycast.
+        ]=]
         return rawget(self, "_raycastResult")
     elseif i == "Destroying" then
+        --[=[
+            @within LaserPointer
+            @readonly
+            @prop Destroying Signal<>
+            Fires while `Destroy()` is executing.
+        ]=]
         return rawget(self, "_destroying")
     else
         return LASER_POINTER_METATABLE[i] or error(i.. " is not a valid member of LaserPointer", 2)
@@ -113,6 +154,11 @@ function LaserPointer:constructor(controller)
     end))
 end
 
+--[=[
+    @within LaserPointer
+    @param controller Quest2Controller
+    @return LaserPointer
+]=]
 function LaserPointer.new(controller)
     local self = setmetatable({}, LASER_POINTER_METATABLE)
     LaserPointer.constructor(self, controller)
@@ -120,6 +166,9 @@ function LaserPointer.new(controller)
     return self
 end
 
+--[=[
+    @within LaserPointer
+]=]
 function LASER_POINTER_METATABLE:Destroy()
     self.Destroying:Fire()
     rawget(self, "RenderStepDisconnect")()

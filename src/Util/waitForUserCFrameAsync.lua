@@ -8,12 +8,17 @@ return function(userCFrame)
             reject("VR is not enabled")
         end
 
-        if not VRService:GetUserCFrameEnabled(userCFrame) then
-            repeat
-                task.wait()
-            until VRService:GetUserCFrameEnabled(userCFrame)
+        if VRService:GetUserCFrameEnabled(userCFrame) then
+            resolve()
+            return
         end
 
-        resolve()
+        local connection
+        connection = VRService.UserCFrameEnabled:Connect(function(type, enabled)
+            if enabled and type == userCFrame then
+                connection:Disconnect()
+                resolve()
+            end
+        end)
     end)
 end

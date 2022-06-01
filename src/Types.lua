@@ -14,9 +14,6 @@ local Controller = {
     UserPosition = t.Vector3,
     Velocity = t.Vector3,
     GamepadNum = t.enum(Enum.UserInputType),
-    GripTriggerPosition = t.number,
-    IndexTriggerPosition = t.number,
-    ThumbstickLocation = t.Vector2,
 }
 local ControllerInterface = t.interface(Controller)
 local Threshold = t.numberConstrainedExclusive(0, 1)

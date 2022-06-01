@@ -8,22 +8,48 @@ local bindToRenderStep = require(script.Parent.Parent.Util.bindToRenderStep)
 local Constants = require(script.Parent.Parent.Constants)
 local HAND_CONTROLLER_NAME_MAP = Constants.HAND_CONTROLLER_NAME_MAP
 
-local ControllerAdornee = {}
-local CONTROLLER_ADORNEE_METATABLE = {}
-function CONTROLLER_ADORNEE_METATABLE:__index(i)
+--[=[
+    @class Quest2ControllerAdornee
+]=]
+local Quest2ControllerAdornee = {}
+local QUEST2_CONTROLLER_ADORNEE_METATABLE = {}
+function QUEST2_CONTROLLER_ADORNEE_METATABLE:__index(i)
     if i == "Controller" then
+        --[=[
+            @within Quest2ControllerAdornee
+            @prop Controller Quest2Controller
+            Reference to the controller that this object is currently adorning.
+        ]=]
         return rawget(self, "_controller")
     elseif i == "Model" then
+        --[=[
+            @within Quest2ControllerAdornee
+            @readonly
+            @prop Model Model
+            The adornee model controlled by this object.
+        ]=]
         return rawget(self, "_model")
     elseif i == "RootPart" then
+        --[=[
+            @within Quest2ControllerAdornee
+            @readonly
+            @prop RootPart BasePart
+            The adornee model's PrimaryPart.
+        ]=]
         return self.Model.PrimaryPart
     elseif i == "Destroying" then
+        --[=[
+            @within Quest2ControllerAdornee
+            @readonly
+            @prop Destroying Signal<>
+            Fires while `Destroy()` is executing.
+        ]=]
         return rawget(self, "_destroying")
     else
-        return CONTROLLER_ADORNEE_METATABLE[i] or error(i.. " is not a valid member of Controller", 2)
+        return QUEST2_CONTROLLER_ADORNEE_METATABLE[i] or error(i.. " is not a valid member of Controller", 2)
     end
 end
-function CONTROLLER_ADORNEE_METATABLE:__newindex(i, v)
+function QUEST2_CONTROLLER_ADORNEE_METATABLE:__newindex(i, v)
     if i == "Controller" then
         t.Controller(v)
         rawset(self, "_hand", v)
@@ -32,11 +58,11 @@ function CONTROLLER_ADORNEE_METATABLE:__newindex(i, v)
     end
 end
 
-function ControllerAdornee:constructor(controller, controllers)
+function Quest2ControllerAdornee:constructor(controller, controllers)
     t.new(controller, controllers)
 
     -- roblox-ts compatibility
-    fixSuperclass(self, ControllerAdornee, CONTROLLER_ADORNEE_METATABLE)
+    fixSuperclass(self, Quest2ControllerAdornee, QUEST2_CONTROLLER_ADORNEE_METATABLE)
 
     local camera = workspace.CurrentCamera
     local model = controllers[HAND_CONTROLLER_NAME_MAP[controller.Hand]]:Clone()
@@ -84,19 +110,28 @@ function ControllerAdornee:constructor(controller, controllers)
     end))
 end
 
-function ControllerAdornee.new(controller, controllers)
+--[=[
+    @within Quest2ControllerAdornee
+    @param controller Quest2Controller
+    @param controllers Instance
+    @return Quest2ControllerAdornee
+]=]
+function Quest2ControllerAdornee.new(controller, controllers)
     -- Rojo currently doesn't support syncing in meshes so we pass in the controllers as an argument
-    local self = setmetatable({}, CONTROLLER_ADORNEE_METATABLE)
-    ControllerAdornee.constructor(self, controller, controllers)
+    local self = setmetatable({}, QUEST2_CONTROLLER_ADORNEE_METATABLE)
+    Quest2ControllerAdornee.constructor(self, controller, controllers)
 
     return self
 end
 
-function CONTROLLER_ADORNEE_METATABLE:Destroy()
+--[=[
+    @within Quest2ControllerAdornee
+]=]
+function QUEST2_CONTROLLER_ADORNEE_METATABLE:Destroy()
     self.Destroying:Fire()
     rawget(self, "RenderStepDisconnect")()
 end
 
 -- roblox-ts compatability
-ControllerAdornee.default = ControllerAdornee
-return ControllerAdornee
+Quest2ControllerAdornee.default = Quest2ControllerAdornee
+return Quest2ControllerAdornee

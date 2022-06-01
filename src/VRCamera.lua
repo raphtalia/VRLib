@@ -4,22 +4,62 @@ local t = require(script.Parent.Types).VRCamera
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
 
+--[=[
+    @class VRCamera
+]=]
 local VRCamera = {}
 local VR_CAMERA_METATABLE = {}
 function VR_CAMERA_METATABLE:__index(i)
     if i == "Headset" then
+        --[=[
+            @within VRCamera
+            @prop Headset Headset
+            Reference to the headset that the camera is tracking.
+        ]=]
         return rawget(self, "_headset")
     elseif i == "Height" then
+        --[=[
+            @within VRCamera
+            @prop Height number
+            The vertical offset used to match the in-game floor to the real-life floor. This is not always the same as the height of the person.
+        ]=]
         return rawget(self, "_height")
     elseif i == "WorldCFrame" then
+        --[=[
+            @within VRCamera
+            @prop WorldCFrame CFrame
+            The in-game rotation and floor position of the camera. This can be thought of as the location of the base of the camera.
+        ]=]
         return rawget(self, "_worldCFrame")
     elseif i == "WorldPosition" then
+        --[=[
+            @within VRCamera
+            @prop WorldPosition Vector3
+            The in-game floor position of the camera.
+        ]=]
         return self.WorldCFrame.Position
     elseif i == "HeadCFrame" then
+        --[=[
+            @within VRCamera
+            @unreleased
+            @prop HeadCFrame CFrame
+            The in-game rotation and position of the headset. This is `CFrame.new(0, VRCamera.Height, 0) * VRCamera.WorldCFrame * VRCamera.Headset.UserCFrame`.
+        ]=]
         return CFrame.new(0, self.Height, 0) * self.WorldCFrame * self.Headset.UserCFrame
     elseif i == "HeadPosition" then
+        --[=[
+            @within VRCamera
+            @unreleased
+            @prop HeadPosition Vector3
+            The in-game position of the headset.
+        ]=]
         return self.HeadCFrame.Position
     elseif i == "Destroying" then
+        --[=[
+            @within VRCamera
+            @prop Destroying Signal<>
+            Fires while `Destroy()` is executing.
+        ]=]
         return rawget(self, "_destroying")
     else
         return VR_CAMERA_METATABLE[i] or error(i.. " is not a valid member of VRCamera", 2)
@@ -67,6 +107,11 @@ function VRCamera:constructor(headset)
     end))
 end
 
+--[=[
+    @within VRCamera
+    @param headset Headset
+    @return VRCamera
+]=]
 function VRCamera.new(headset)
     local self = setmetatable({}, VR_CAMERA_METATABLE)
     VRCamera.constructor(self, headset)
@@ -74,6 +119,9 @@ function VRCamera.new(headset)
     return self
 end
 
+--[=[
+    @within VRCamera
+]=]
 function VR_CAMERA_METATABLE:Destroy()
     self.Destroying:Fire()
     rawget(self, "RenderStepDisconnect")()

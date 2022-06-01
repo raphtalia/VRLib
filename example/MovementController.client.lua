@@ -20,7 +20,7 @@ local rightLaser = VRLib.LaserPointer.new(rightController)
 rightLaser.Length = 32
 rightLaser.Visible = false
 
-leftController.ThumbstickChanged:Connect(function(loc)
+leftController.Inputs.Thumbstick.Changed:Connect(function(loc)
     -- Without this check NaN values will be written to VRCamera
     if loc.Magnitude > 0 then
         local frontDir = vrCamera.HeadCFrame:VectorToWorldSpace(Vector3.new(loc.X, 0, -loc.Y))
@@ -28,18 +28,18 @@ leftController.ThumbstickChanged:Connect(function(loc)
     end
 end)
 
-leftController.IndexTriggerFullyDown:Connect(function()
+leftController.Inputs.IndexTrigger.FullyDown:Connect(function()
     leftLaser.Visible = true
 end)
 
-leftController.IndexTriggerUp:Connect(function()
+leftController.Inputs.IndexTrigger.Up:Connect(function()
     leftLaser.Visible = false
     if leftLaser.RaycastResult then
         vrCamera.WorldPosition = leftLaser.RaycastResult.Position
     end
 end)
 
-rightController.ThumbstickEdgeEntered:Connect(function()
+rightController.Inputs.Thumbstick.EdgeEntered:Connect(function()
     local loc = rightController.ThumbstickLocation
     local angle = math.deg(math.atan2(loc.X, loc.Y)) + 180
 
@@ -50,17 +50,17 @@ rightController.ThumbstickEdgeEntered:Connect(function()
     end
 end)
 
-rightController.IndexTriggerFullyDown:Connect(function()
+rightController.Inputs.IndexTrigger.FullyDown:Connect(function()
     rightLaser.Visible = true
 end)
 
-rightController.IndexTriggerUp:Connect(function()
+rightController.Inputs.IndexTrigger.Up:Connect(function()
     rightLaser.Visible = false
     if rightLaser.RaycastResult then
         vrCamera.WorldPosition = rightLaser.RaycastResult.Position
     end
 end)
 
-rightController.Button2Down:Connect(function()
+rightController.Inputs.Button2.Down:Connect(function()
     vrCamera.WorldCFrame = CFrame.new()
 end)

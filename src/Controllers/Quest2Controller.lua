@@ -43,14 +43,35 @@ local function getOculusControllerGamepadNum()
     return Enum.UserInputType.Gamepad1
 end
 
-local Controller = {}
-local CONTROLLER_METATABLE = {}
-function CONTROLLER_METATABLE:__index(i)
+--[=[
+    @class Quest2Controller
+]=]
+local Quest2Controller = {}
+local QUEST2_CONTROLLER_METATABLE = {}
+function QUEST2_CONTROLLER_METATABLE:__index(i)
     if i == "UserCFrame" then
+        --[=[
+            @within Quest2Controller
+            @readonly
+            @prop UserCFrame CFrame
+            The real-life position and rotation of the controller.
+        ]=]
         return UserInputService:GetUserCFrame(HAND_USER_CFRAME_MAP[self.Hand])
     elseif i == "UserPosition" then
+        --[=[
+            @within Quest2Controller
+            @readonly
+            @prop UserPosition Vector3
+            The real-life position of the controller.
+        ]=]
         return self.UserCFrame.Position
     elseif i == "WorldCFrame" then
+        --[=[
+            @within Quest2Controller
+            @readonly
+            @prop WorldCFrame CFrame
+            The in-game rotation and position of the controller.
+        ]=]
         local camera = workspace.CurrentCamera
 
         if camera.HeadLocked then
@@ -59,72 +80,76 @@ function CONTROLLER_METATABLE:__index(i)
             return camera:GetRenderCFrame() * UserInputService:GetUserCFrame(Enum.UserCFrame.Head):Inverse() * self.UserCFrame
         end
     elseif i == "WorldPosition" then
+        --[=[
+            @within Quest2Controller
+            @readonly
+            @prop WorldPosition Vector3
+            The in-game position of the controller.
+        ]=]
         return self.WorldCFrame.Position
     elseif i == "Velocity" then
+        --[=[
+            @within Quest2Controller
+            @readonly
+            @prop Velocity Vector3
+            Controller's change in position over time.
+        ]=]
         return rawget(self, "_velocity")
     elseif i == "Hand" then
+        --[=[
+            @within Quest2Controller
+            @readonly
+            @prop Hand Hand
+            The hand the controller is tracking.
+        ]=]
         return rawget(self, "_hand")
     elseif i == "GamepadNum" then
+        --[=[
+            @within Quest2Controller
+            @prop GamepadNum UserInputType
+            The ID of the gamepad the controller is identified as.
+        ]=]
         return rawget(self, "_gamepadNum")
     elseif i == "TouchpadMode" then
+        --[=[
+            @within Quest2Controller
+            @prop TouchpadMode VRTouchpadMode
+            The mode of the controller's touchpad.
+        ]=]
         return VRService:GetTouchpadMode(HAND_VR_TOUCHPAD_MAP[self.Hand])
-    elseif i == "Controls" then
-        return rawget(self, "_controls")
-    elseif i == "GripTriggerPosition" then
-        return self.Controls.GripTrigger.Position
-    elseif i == "IndexTriggerPosition" then
-        return self.Controls.IndexTrigger.Position
-    elseif i == "ThumbstickLocation" then
-        return self.Controls.Thumbstick.Location
+    elseif i == "Inputs" then
+        --[=[
+            @within Quest2Controller
+            @interface Inputs
+            @field GripTrigger Trigger
+            @field IndexTrigger Trigger
+            @field Thumbstick Thumbstick
+            @field Button1 Button
+            @field Button2 Button
+            Table of input objects tied to the controller.
+        ]=]
+        return rawget(self, "_inputs")
     elseif i == "VibrationValue" then
+        --[=[
+            @within Quest2Controller
+            @readonly
+            @prop VibrationValue number
+            The vibration intensity of the controller on a scale of 0 to 1.
+        ]=]
         return HapticService:GetMotor(self.GamepadNum, HAND_VIBRATION_MOTOR_MAP[self.Hand])
-    elseif i == "Button1Down" then
-        return self.Controls.Button1.Down
-    elseif i == "Button1Up" then
-        return self.Controls.Button1.Up
-    elseif i == "Button2Down" then
-        return self.Controls.Button2.Down
-    elseif i == "Button2Up" then
-        return self.Controls.Button2.Up
-    elseif i == "GripTriggerUp" then
-        return self.Controls.GripTrigger.Up
-    elseif i == "GripTriggerDown" then
-        return self.Controls.GripTrigger.Down
-    elseif i == "GripTriggerFullyUp" then
-        return self.Controls.GripTrigger.FullyUp
-    elseif i == "GripTriggerFullyDown" then
-        return self.Controls.GripTrigger.FullyDown
-    elseif i == "IndexTriggerUp" then
-        return self.Controls.IndexTrigger.Up
-    elseif i == "IndexTriggerDown" then
-        return self.Controls.IndexTrigger.Down
-    elseif i == "IndexTriggerFullyUp" then
-        return self.Controls.IndexTrigger.FullyUp
-    elseif i == "IndexTriggerFullyDown" then
-        return self.Controls.IndexTrigger.FullyDown
-    elseif i == "ThumbstickUp" then
-        return self.Controls.Thumbstick.Up
-    elseif i == "ThumbstickDown" then
-        return self.Controls.Thumbstick.Down
-    elseif i == "ThumbstickReleased" then
-        return self.Controls.Thumbstick.Released
-    elseif i == "ThumbstickEdgeEntered" then
-        return self.Controls.Thumbstick.EdgeEntered
-    elseif i == "ThumbstickEdgeLeft" then
-        return self.Controls.Thumbstick.EdgeLeft
-    elseif i == "GripTriggerChanged" then
-        return self.Controls.GripTrigger.Changed
-    elseif i == "IndexTriggerChanged" then
-        return self.Controls.IndexTrigger.Changed
-    elseif i == "ThumbstickChanged" then
-        return self.Controls.Thumbstick.Changed
     elseif i == "Destroying" then
+        --[=[
+            @within Quest2Controller
+            @readonly
+            @prop Destroying Signal<>
+            Fires while `Destroy()` is executing.
+        ]=]
         return rawget(self, "_destroying")
     else
-        return CONTROLLER_METATABLE[i] or error(i.. " is not a valid member of Controller", 2)
+        return QUEST2_CONTROLLER_METATABLE[i] or error(i.. " is not a valid member of Controller", 2)
     end
 end
-function CONTROLLER_METATABLE:__newindex(i, v)
+function QUEST2_CONTROLLER_METATABLE:__newindex(i, v)
     if i == "GamepadNum" then
         t.GamepadNum(v)
         rawset(self, "_gamepadNum", v)
@@ -136,7 +161,7 @@ function CONTROLLER_METATABLE:__newindex(i, v)
     end
 end
 
-function Controller:constructor(hand, gamepadNum)
+function Quest2Controller:constructor(hand, gamepadNum)
     t.new(hand, gamepadNum)
 
     if not VRService:GetUserCFrameEnabled(HAND_USER_CFRAME_MAP[hand]) then
@@ -144,12 +169,12 @@ function Controller:constructor(hand, gamepadNum)
     end
 
     -- roblox-ts compatibility
-    fixSuperclass(self, Controller, CONTROLLER_METATABLE)
+    fixSuperclass(self, Quest2Controller, QUEST2_CONTROLLER_METATABLE)
 
     rawset(self, "_velocity", Vector3.new())
     rawset(self, "_hand", hand)
     rawset(self, "_gamepadNum", gamepadNum or getOculusControllerGamepadNum())
-    rawset(self, "_controls", table.freeze({
+    rawset(self, "_inputs", table.freeze({
         GripTrigger = Trigger.new(0.9),
         IndexTrigger = Trigger.new(0.9),
         Thumbstick = Thumbstick.new(0.975),
@@ -171,15 +196,15 @@ function Controller:constructor(hand, gamepadNum)
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
             if keyCode == keyCodeMap.GripTrigger then
-                self.Controls.GripTrigger:UpdateTriggerAbsolute(1)
+                self.Inputs.GripTrigger:UpdateTriggerAbsolute(1)
             elseif keyCode == keyCodeMap.IndexTrigger then
-                self.Controls.IndexTrigger:UpdateTriggerAbsolute(1)
+                self.Inputs.IndexTrigger:UpdateTriggerAbsolute(1)
             elseif keyCode == keyCodeMap.ThumbstickButton then
-                self.Controls.Thumbstick:UpdateButton(true)
+                self.Inputs.Thumbstick:UpdateButton(true)
             elseif keyCode == keyCodeMap.Button1 then
-                self.Controls.Button1:UpdateButton(true)
+                self.Inputs.Button1:UpdateButton(true)
             elseif keyCode == keyCodeMap.Button2 then
-                self.Controls.Button2:UpdateButton(true)
+                self.Inputs.Button2:UpdateButton(true)
             end
         end
     end))
@@ -190,17 +215,17 @@ function Controller:constructor(hand, gamepadNum)
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
             if keyCode == keyCodeMap.GripTrigger then
-                self.Controls.GripTrigger:UpdateTriggerAbsolute(0)
+                self.Inputs.GripTrigger:UpdateTriggerAbsolute(0)
             elseif keyCode == keyCodeMap.IndexTrigger then
-                self.Controls.IndexTrigger:UpdateTriggerAbsolute(0)
+                self.Inputs.IndexTrigger:UpdateTriggerAbsolute(0)
             elseif keyCode == keyCodeMap.Thumbstick then
-                self.Controls.Thumbstick:UpdateLocationAbsolute(Vector2.new())
+                self.Inputs.Thumbstick:UpdateLocationAbsolute(Vector2.new())
             elseif keyCode == keyCodeMap.ThumbstickButton then
-                self.Controls.Thumbstick:UpdateButton(false)
+                self.Inputs.Thumbstick:UpdateButton(false)
             elseif keyCode == keyCodeMap.Button1 then
-                self.Controls.Button1:UpdateButton(false)
+                self.Inputs.Button1:UpdateButton(false)
             elseif keyCode == keyCodeMap.Button2 then
-                self.Controls.Button2:UpdateButton(false)
+                self.Inputs.Button2:UpdateButton(false)
             end
         end
     end))
@@ -212,24 +237,33 @@ function Controller:constructor(hand, gamepadNum)
             local keyCodeMap = CONTROLLER_KEYCODES[self.Hand]
 
             if keyCode == keyCodeMap.GripTrigger then
-                self.Controls.GripTrigger:UpdateTriggerDelta(delta.Z)
+                self.Inputs.GripTrigger:UpdateTriggerDelta(delta.Z)
             elseif keyCode == keyCodeMap.IndexTrigger then
-                self.Controls.IndexTrigger:UpdateTriggerDelta(delta.Z)
+                self.Inputs.IndexTrigger:UpdateTriggerDelta(delta.Z)
             elseif keyCode == keyCodeMap.Thumbstick then
-                self.Controls.Thumbstick:UpdateLocationDelta(Vector2.new(delta.X, delta.Y))
+                self.Inputs.Thumbstick:UpdateLocationDelta(Vector2.new(delta.X, delta.Y))
             end
         end
     end))
 end
 
-function Controller.new(hand, gamepadNum)
-    local self = setmetatable({}, CONTROLLER_METATABLE)
-    Controller.constructor(self, hand, gamepadNum)
+--[=[
+    @within Quest2Controller
+    @param hand Hand
+    @param gamepadNum UserInputType?
+    @return Quest2Controller
+]=]
+function Quest2Controller.new(hand, gamepadNum)
+    local self = setmetatable({}, QUEST2_CONTROLLER_METATABLE)
+    Quest2Controller.constructor(self, hand, gamepadNum)
 
     return self
 end
 
-function CONTROLLER_METATABLE:Destroy()
+--[=[
+    @within Quest2Controller
+]=]
+function QUEST2_CONTROLLER_METATABLE:Destroy()
     self.Destroying:Fire()
     rawget(self, "RenderStepDisconnect")()
     rawget(self, "InputBeganConnection"):Disconnect()
@@ -237,19 +271,12 @@ function CONTROLLER_METATABLE:Destroy()
     rawget(self, "InputChangedConnection"):Disconnect()
 end
 
-function CONTROLLER_METATABLE:IsThumbstickDown()
-    return UserInputService:IsGamepadButtonDown(self.GamepadNum, CONTROLLER_KEYCODES[self.Hand].ThumbstickButton)
-end
-
-function CONTROLLER_METATABLE:IsButton1Down()
-    return UserInputService:IsGamepadButtonDown(self.GamepadNum, CONTROLLER_KEYCODES[self.Hand].Button1)
-end
-
-function CONTROLLER_METATABLE:IsButton2Down()
-    return UserInputService:IsGamepadButtonDown(self.GamepadNum, CONTROLLER_KEYCODES[self.Hand].Button2)
-end
-
-function CONTROLLER_METATABLE:SetMotor(vibrationValue)
+--[=[
+    @within Quest2Controller
+    @param vibrationValue number
+    Updates the controller's vibration intensity.
+]=]
+function QUEST2_CONTROLLER_METATABLE:SetMotor(vibrationValue)
     local vibrationPromise = rawget(self, "VibrationPromise")
     if vibrationPromise then
         vibrationPromise:cancel()
@@ -262,7 +289,14 @@ function CONTROLLER_METATABLE:SetMotor(vibrationValue)
     end
 end
 
-function CONTROLLER_METATABLE:Vibrate(vibrationValue, duration)
+--[=[
+    @within Quest2Controller
+    @param vibrationValue number
+    @param duration number
+    @return Promise<void>
+    Vibrates the controller for a limited amount of time, can be cancelled from the returned promise.
+]=]
+function QUEST2_CONTROLLER_METATABLE:Vibrate(vibrationValue, duration)
     duration = duration or 0.1
 
     local promise = Promise.new(function(resolve, _, onCancel)
@@ -284,5 +318,5 @@ function CONTROLLER_METATABLE:Vibrate(vibrationValue, duration)
 end
 
 -- roblox-ts compatability
-Controller.default = Controller
-return Controller
+Quest2Controller.default = Quest2Controller
+return Quest2Controller

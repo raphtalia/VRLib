@@ -1,11 +1,22 @@
-# TODO: Write docs
-
 title = "VRLib"
 
 gitRepoUrl = "https://github.com/raphtalia/VRLib"
 gitSourceBranch = "main"
 
-classOrder = []
+classOrder = [
+  "VRLib",
+  "Headset",
+  "VRCamera",
+  "LaserPointer",
+  "Quest2Controller",
+  "Quest2ControllerAdornee",
+  "Button",
+  "Trigger",
+  "Thumbstick",
+  "Panel",
+  "Hand",
+  "TrackingBehavior",
+]
 
 [home]
 enabled = true
