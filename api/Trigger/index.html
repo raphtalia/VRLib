@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="Docusaurus v2.0.0-beta.9">
+<title data-react-helmet="true">Trigger | VRLib</title><meta data-react-helmet="true" property="og:title" content="Trigger | VRLib"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:url" content="https://raphtalia.github.io/VRLib/api/Trigger"><meta data-react-helmet="true" name="docusaurus_locale" content="en"><meta data-react-helmet="true" name="docusaurus_tag" content="default"><link data-react-helmet="true" rel="canonical" href="https://raphtalia.github.io/VRLib/api/Trigger"><link data-react-helmet="true" rel="alternate" href="https://raphtalia.github.io/VRLib/api/Trigger" hreflang="en"><link data-react-helmet="true" rel="alternate" href="https://raphtalia.github.io/VRLib/api/Trigger" hreflang="x-default"><link rel="stylesheet" href="/VRLib/assets/css/styles.efa8c1b6.css">
+<link rel="preload" href="/VRLib/assets/js/runtime~main.402f70c7.js" as="script">
+<link rel="preload" href="/VRLib/assets/js/main.0b91d65c.js" as="script">
+</head>
+<body>
+<script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
+<div><a href="#" class="skipToContent_1oUP">Skip to main content</a></div><nav class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Navigation bar toggle" class="navbar__toggle clean-btn" type="button" tabindex="0"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/VRLib/"><b class="navbar__title">VRLib</b></a><a class="navbar__item navbar__link" href="/VRLib/docs/intro">Docs</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/VRLib/api/">API</a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/raphtalia/VRLib" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link"><span>GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_3J9K"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></span></a><div class="toggle_71bT toggle_3Zt9 toggleDisabled_3cF-"><div class="toggleTrack_32Fl" role="button" tabindex="-1"><div class="toggleTrackCheck_3lV7"><span class="toggleIcon_O4iE">🌜</span></div><div class="toggleTrackX_S2yS"><span class="toggleIcon_O4iE">🌞</span></div><div class="toggleTrackThumb_xI_Z"></div></div><input type="checkbox" class="toggleScreenReader_28Tw" aria-label="Switch between dark and light mode"></div><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input type="search" id="search_input_react" placeholder="Press S to Search..." aria-label="Search" class="navbar__search-input search-bar"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div class="main-wrapper docPageContainer_2Kz0"><div class="docPage_1bdk"><div class="docSidebarContainer_1ykS"><div class="sidebar_15mo"><nav class="menu thin-scrollbar menu_Bmed"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/VRLib">​V​R​Lib</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/Headset">​Headset</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/VRCamera">​V​R​Camera</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/LaserPointer">​Laser​Pointer</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/Quest2Controller">​Quest2​Controller</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/Quest2ControllerAdornee">​Quest2​Controller​Adornee</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/Button">​Button</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/VRLib/api/Trigger">​Trigger</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/Thumbstick">​Thumbstick</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/Panel">​Panel</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/Hand">​Hand</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/VRLib/api/TrackingBehavior">​Tracking​Behavior</a></li></ul></nav><button type="button" title="Collapse sidebar" aria-label="Collapse sidebar" class="button button--secondary button--outline collapseSidebarButton_1CGd"><svg width="20" height="20" aria-hidden="true" class="collapseSidebarButtonIcon_3E-R"><g fill="#7a7a7a"><path d="M9.992 10.023c0 .2-.062.399-.172.547l-4.996 7.492a.982.982 0 01-.828.454H1c-.55 0-1-.453-1-1 0-.2.059-.403.168-.551l4.629-6.942L.168 3.078A.939.939 0 010 2.528c0-.548.45-.997 1-.997h2.996c.352 0 .649.18.828.45L9.82 9.472c.11.148.172.347.172.55zm0 0"></path><path d="M19.98 10.023c0 .2-.058.399-.168.547l-4.996 7.492a.987.987 0 01-.828.454h-3c-.547 0-.996-.453-.996-1 0-.2.059-.403.168-.551l4.625-6.942-4.625-6.945a.939.939 0 01-.168-.55 1 1 0 01.996-.997h3c.348 0 .649.18.828.45l4.996 7.492c.11.148.168.347.168.55zm0 0"></path></g></svg></button></div></div><main class="docMainContainer_28N5"><div class="container padding-vert--lg"><div class="row"><div class="col docItemCol_3WPG"><div class="docItemContainer_3XDu"><article><div class="member_qHIL markdown"><div class="tocCollapsible_1PrD theme-doc-toc-mobile tocMobile_3ryM"><button type="button" class="clean-btn tocCollapsibleButton_2O1e">On this page</button></div><header><h1 class="docTitle_1ddc" style="text-decoration:none"><span style="display:inline-block">Trigger</span></h1><div class="luaClassTags_2Zrs"></div><div></div></header><h2 class="anchor anchorWithStickyNavbar_31ik" id="properties">Properties<a aria-hidden="true" class="hash-link" href="#properties" title="Direct link to heading">​</a></h2><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="RawPosition"><code style="text-decoration:none">RawPosition</code><a aria-hidden="true" class="hash-link" href="#RawPosition" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L20"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->RawPosition<!-- -->:<!-- --> </code> <code class="blue_2Afy">number</code></div><div>
+<p>
+  The unprocessed position of the trigger. This means the position
+  could be negative or greater than 1.
+</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="Position"><code style="text-decoration:none">Position</code><a aria-hidden="true" class="hash-link" href="#Position" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L29"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->Position<!-- -->:<!-- --> </code> <code class="blue_2Afy">number</code></div><div>
+<p>
+  Position is garunteed to be 0 when at rest and at 1 when past the
+  threshold.
+</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="TriggerThreshold"><code style="text-decoration:none">TriggerThreshold</code><a aria-hidden="true" class="hash-link" href="#TriggerThreshold" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L41"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->TriggerThreshold<!-- -->:<!-- --> </code> <code class="blue_2Afy">number</code></div><div>
+<p>The threshold at which the trigger is considered to be fully down.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="IsDown"><code style="text-decoration:none">IsDown</code><a aria-hidden="true" class="hash-link" href="#IsDown" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L49"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->IsDown<!-- -->:<!-- --> </code> <code class="blue_2Afy">boolean</code></div><div>
+<p>If the trigger is down at all.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="IsFullyDown"><code style="text-decoration:none">IsFullyDown</code><a aria-hidden="true" class="hash-link" href="#IsFullyDown" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L57"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->IsFullyDown<!-- -->:<!-- --> </code> <code class="blue_2Afy">boolean</code></div><div>
+<p>If the trigger is fully down.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="Up"><code style="text-decoration:none">Up</code><a aria-hidden="true" class="hash-link" href="#Up" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L65"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->Up<!-- -->:<!-- --> </code> <code class="blue_2Afy">Signal</code><code class="op_1JtD">&lt;</code><code class="op_1JtD">&gt;</code></div><div>
+<p>Fires when the trigger is released from the fully down position.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="Down"><code style="text-decoration:none">Down</code><a aria-hidden="true" class="hash-link" href="#Down" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L73"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->Down<!-- -->:<!-- --> </code> <code class="blue_2Afy">Signal</code><code class="op_1JtD">&lt;</code><code class="op_1JtD">&gt;</code></div><div>
+<p>Fires when the trigger is initially pressed.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="FullyUp"><code style="text-decoration:none">FullyUp</code><a aria-hidden="true" class="hash-link" href="#FullyUp" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L81"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->FullyUp<!-- -->:<!-- --> </code> <code class="blue_2Afy">Signal</code><code class="op_1JtD">&lt;</code><code class="op_1JtD">&gt;</code></div><div>
+<p>Fires when the trigger is released fully.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="FullyDown"><code style="text-decoration:none">FullyDown</code><a aria-hidden="true" class="hash-link" href="#FullyDown" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L89"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->FullyDown<!-- -->:<!-- --> </code> <code class="blue_2Afy">Signal</code><code class="op_1JtD">&lt;</code><code class="op_1JtD">&gt;</code></div><div>
+<p>Fires when the trigger is fully pressed.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="Changed"><code style="text-decoration:none">Changed</code><a aria-hidden="true" class="hash-link" href="#Changed" title="Direct link to heading">​</a></h3><span class="badge_3ZFo" style="color:#e74c3c"><span class="badgeTooltip_2qiw">This item is read only and cannot be modified.</span><span class="badgeToolTipTail_2yaQ"><svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" fill="#e74c3c" x="0px" y="0px" viewBox="0 0 96 96"><path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z"></path></svg> <!-- -->Read Only</span></span><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L97"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.<!-- -->Changed<!-- -->:<!-- --> </code> <code class="blue_2Afy">Signal</code><code class="op_1JtD">&lt;</code><code class="purple__nFc">(</code><div class="inset_2cJr"><code>pos<!-- -->: </code><code class="blue_2Afy">number</code><code class="purple__nFc">,</code></div><div class="inset_2cJr"><code>delta<!-- -->: </code><code class="blue_2Afy">number</code></div><code class="purple__nFc">)</code><code class="op_1JtD">&gt;</code></div><div>
+<p>Fires when the trigger's position changes.</p>
+</div><h2 class="anchor anchorWithStickyNavbar_31ik" id="functions">Functions<a aria-hidden="true" class="hash-link" href="#functions" title="Direct link to heading">​</a></h2><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="new"><code style="text-decoration:none">new</code><a aria-hidden="true" class="hash-link" href="#new" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L128"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->.</code><code class="green_3LnD">new</code><code>(</code><code>threshold<!-- -->: </code><code class="blue_2Afy">number?</code><code>) → </code><code class="blue_2Afy"><a style="text-decoration:underline;color:inherit" href="/VRLib/api/Trigger">Trigger</a></code></div><div></div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="UpdateTriggerAbsolute"><code style="text-decoration:none">UpdateTriggerAbsolute</code><a aria-hidden="true" class="hash-link" href="#UpdateTriggerAbsolute" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L140"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->:</code><code class="green_3LnD">UpdateTriggerAbsolute</code><code>(</code><code>pos<!-- -->: </code><code class="blue_2Afy">number</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Updates the position of the trigger by an absolute value.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="UpdateTriggerDelta"><code style="text-decoration:none">UpdateTriggerDelta</code><a aria-hidden="true" class="hash-link" href="#UpdateTriggerDelta" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L174"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->:</code><code class="green_3LnD">UpdateTriggerDelta</code><code>(</code><code>delta<!-- -->: </code><code class="blue_2Afy">number</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Updates the position of the trigger by a relative value.</p>
+</div><div class="divider_3z1R"></div><h3 class="anchor anchorWithStickyNavbar_31ik" id="SetTriggerThreshold"><code style="text-decoration:none">SetTriggerThreshold</code><a aria-hidden="true" class="hash-link" href="#SetTriggerThreshold" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_1UH0"><a class="sourceButton_2aE5" href="https://github.com/raphtalia/VRLib/blob/main/src/Inputs/Trigger.lua#L183"><div class="sourceButtonText_monK">&lt;/&gt;</div></a></div><div class="memberString_P8-X"><code>Trigger<!-- -->:</code><code class="green_3LnD">SetTriggerThreshold</code><code>(</code><code>threshold<!-- -->: </code><code class="blue_2Afy">number</code><code>) → </code><code>(</code><code>)</code></div><div>
+<p>Sets the threshold at which the trigger is considered to be fully down.</p>
+</div></div></article></div><details><summary>Show raw api</summary><pre style="max-width:100%;white-space:pre-wrap">{
+    &quot;functions&quot;: [
+        {
+            &quot;name&quot;: &quot;new&quot;,
+            &quot;desc&quot;: &quot;&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;threshold&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number?&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Trigger&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 128,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;UpdateTriggerAbsolute&quot;,
+            &quot;desc&quot;: &quot;Updates the position of the trigger by an absolute value.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;pos&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 140,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;UpdateTriggerDelta&quot;,
+            &quot;desc&quot;: &quot;Updates the position of the trigger by a relative value.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;delta&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 174,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;SetTriggerThreshold&quot;,
+            &quot;desc&quot;: &quot;Sets the threshold at which the trigger is considered to be fully down.&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;threshold&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [],
+            &quot;function_type&quot;: &quot;method&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 183,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        }
+    ],
+    &quot;properties&quot;: [
+        {
+            &quot;name&quot;: &quot;RawPosition&quot;,
+            &quot;desc&quot;: &quot;The unprocessed position of the trigger. This means the position\ncould be negative or greater than 1.\n        &quot;,
+            &quot;lua_type&quot;: &quot;number&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 20,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;Position&quot;,
+            &quot;desc&quot;: &quot;Position is garunteed to be 0 when at rest and at 1 when past the\nthreshold.\n        &quot;,
+            &quot;lua_type&quot;: &quot;number&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 29,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;TriggerThreshold&quot;,
+            &quot;desc&quot;: &quot;The threshold at which the trigger is considered to be fully down.\n        &quot;,
+            &quot;lua_type&quot;: &quot;number&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 41,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;IsDown&quot;,
+            &quot;desc&quot;: &quot;If the trigger is down at all.\n        &quot;,
+            &quot;lua_type&quot;: &quot;boolean&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 49,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;IsFullyDown&quot;,
+            &quot;desc&quot;: &quot;If the trigger is fully down.\n        &quot;,
+            &quot;lua_type&quot;: &quot;boolean&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 57,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;Up&quot;,
+            &quot;desc&quot;: &quot;Fires when the trigger is released from the fully down position.\n        &quot;,
+            &quot;lua_type&quot;: &quot;Signal&lt;&gt;&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 65,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;Down&quot;,
+            &quot;desc&quot;: &quot;Fires when the trigger is initially pressed.\n        &quot;,
+            &quot;lua_type&quot;: &quot;Signal&lt;&gt;&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 73,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;FullyUp&quot;,
+            &quot;desc&quot;: &quot;Fires when the trigger is released fully.\n        &quot;,
+            &quot;lua_type&quot;: &quot;Signal&lt;&gt;&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 81,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;FullyDown&quot;,
+            &quot;desc&quot;: &quot;Fires when the trigger is fully pressed.\n        &quot;,
+            &quot;lua_type&quot;: &quot;Signal&lt;&gt;&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 89,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;Changed&quot;,
+            &quot;desc&quot;: &quot;Fires when the trigger&#x27;s position changes.\n        &quot;,
+            &quot;lua_type&quot;: &quot;Signal&lt;(pos: number, delta: number)&gt;&quot;,
+            &quot;readonly&quot;: true,
+            &quot;source&quot;: {
+                &quot;line&quot;: 97,
+                &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+            }
+        }
+    ],
+    &quot;types&quot;: [],
+    &quot;name&quot;: &quot;Trigger&quot;,
+    &quot;desc&quot;: &quot;&quot;,
+    &quot;source&quot;: {
+        &quot;line&quot;: 9,
+        &quot;path&quot;: &quot;src/Inputs/Trigger.lua&quot;
+    }
+}</pre></details></div><div class="col col--3"><div class="tableOfContents_35-E thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a><ul><li><a href="#Changed" class="table-of-contents__link toc-highlight">Changed</a></li><li><a href="#Down" class="table-of-contents__link toc-highlight">Down</a></li><li><a href="#FullyDown" class="table-of-contents__link toc-highlight">FullyDown</a></li><li><a href="#FullyUp" class="table-of-contents__link toc-highlight">FullyUp</a></li><li><a href="#IsDown" class="table-of-contents__link toc-highlight">IsDown</a></li><li><a href="#IsFullyDown" class="table-of-contents__link toc-highlight">IsFullyDown</a></li><li><a href="#Position" class="table-of-contents__link toc-highlight">Position</a></li><li><a href="#RawPosition" class="table-of-contents__link toc-highlight">RawPosition</a></li><li><a href="#TriggerThreshold" class="table-of-contents__link toc-highlight">TriggerThreshold</a></li><li><a href="#Up" class="table-of-contents__link toc-highlight">Up</a></li></ul></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#SetTriggerThreshold" class="table-of-contents__link toc-highlight">:SetTriggerThreshold</a></li><li><a href="#UpdateTriggerAbsolute" class="table-of-contents__link toc-highlight">:UpdateTriggerAbsolute</a></li><li><a href="#UpdateTriggerDelta" class="table-of-contents__link toc-highlight">:UpdateTriggerDelta</a></li><li><a href="#new" class="table-of-contents__link toc-highlight">.new</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2022 raphtalia</div></div></div></footer></div>
+<script src="/VRLib/assets/js/runtime~main.402f70c7.js"></script>
+<script src="/VRLib/assets/js/main.0b91d65c.js"></script>
+</body>
+</html>
