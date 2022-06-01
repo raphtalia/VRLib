@@ -77,7 +77,7 @@ end)
 
 ## Controller Support
 
-Headset support should work across the board while the controller support is more difficult due to different input schemes and varying levels of support from Roblox themselves.
+Headset support should work across the board while controller support is more difficult due to different input schemes and varying levels of support from Roblox themselves.
 
 -   :white_check_mark: - Fully supported
 -   :warning: - Partially supported

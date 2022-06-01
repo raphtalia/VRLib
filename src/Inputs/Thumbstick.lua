@@ -5,6 +5,7 @@ local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
 
 --[=[
     @class Thumbstick
+    An analog stick that includes a binary switch.
 ]=]
 local Thumbstick = {}
 local THUMBSTICK_METATABLE = {}

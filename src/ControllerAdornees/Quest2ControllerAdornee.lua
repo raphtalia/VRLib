@@ -10,6 +10,9 @@ local HAND_CONTROLLER_NAME_MAP = Constants.HAND_CONTROLLER_NAME_MAP
 
 --[=[
     @class Quest2ControllerAdornee
+
+    Visualization of the controllers with animated buttons, triggers, and
+    thumbstick.
 ]=]
 local Quest2ControllerAdornee = {}
 local QUEST2_CONTROLLER_ADORNEE_METATABLE = {}
@@ -115,9 +118,15 @@ end
     @param controller Quest2Controller
     @param controllers Instance
     @return Quest2ControllerAdornee
+    Due to Rojo currently not supporting meshes
+    [#534](https://github.com/rojo-rbx/rojo/pull/534), the controllers found in
+    the `assets` directory of the repository must be passed in as an argument.
 ]=]
 function Quest2ControllerAdornee.new(controller, controllers)
-    -- Rojo currently doesn't support syncing in meshes so we pass in the controllers as an argument
+    --[[
+        Rojo currently doesn't support syncing in meshes so we pass in the
+        controllers as an argument
+    ]]
     local self = setmetatable({}, QUEST2_CONTROLLER_ADORNEE_METATABLE)
     Quest2ControllerAdornee.constructor(self, controller, controllers)
 

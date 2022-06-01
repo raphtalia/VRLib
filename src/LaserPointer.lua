@@ -8,6 +8,7 @@ local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
 
 --[=[
     @class LaserPointer
+    A substitute for Roblox's built-in laser pointer.
 ]=]
 local LaserPointer = {}
 local LASER_POINTER_METATABLE = {}

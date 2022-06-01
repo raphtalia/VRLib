@@ -5,6 +5,7 @@ local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
 
 --[=[
     @class Trigger
+    An analog button.
 ]=]
 local Trigger = {}
 local TRIGGER_METATABLE = {}

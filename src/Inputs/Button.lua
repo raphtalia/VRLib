@@ -5,6 +5,7 @@ local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
 
 --[=[
     @class Button
+    A binary switch.
 ]=]
 local Button = {}
 local BUTTON_METATABLE = {}

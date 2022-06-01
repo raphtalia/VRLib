@@ -6,6 +6,9 @@ local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
 
 --[=[
     @class VRCamera
+    Substitute for using `Camera.HeadLocked` with more control for developers.
+    If a laser pointer is needed you must use `VRLib.LaserPointer` as Roblox's
+    built-in laser pointer does not work without `Camera.HeadLocked`.
 ]=]
 local VRCamera = {}
 local VR_CAMERA_METATABLE = {}
@@ -21,14 +24,17 @@ function VR_CAMERA_METATABLE:__index(i)
         --[=[
             @within VRCamera
             @prop Height number
-            The vertical offset used to match the in-game floor to the real-life floor. This is not always the same as the height of the person.
+            The vertical offset used to match the in-game floor to the
+            real-life floor. This is not always the same as the height of the
+            person.
         ]=]
         return rawget(self, "_height")
     elseif i == "WorldCFrame" then
         --[=[
             @within VRCamera
             @prop WorldCFrame CFrame
-            The in-game rotation and floor position of the camera. This can be thought of as the location of the base of the camera.
+            The in-game rotation and floor position of the camera. This can be
+            thought of as the location of the base of the camera.
         ]=]
         return rawget(self, "_worldCFrame")
     elseif i == "WorldPosition" then
@@ -43,7 +49,8 @@ function VR_CAMERA_METATABLE:__index(i)
             @within VRCamera
             @unreleased
             @prop HeadCFrame CFrame
-            The in-game rotation and position of the headset. This is `CFrame.new(0, VRCamera.Height, 0) * VRCamera.WorldCFrame * VRCamera.Headset.UserCFrame`.
+            The in-game rotation and position of the headset. This is
+            `CFrame.new(0, VRCamera.Height, 0) * VRCamera.WorldCFrame * VRCamera.Headset.UserCFrame`.
         ]=]
         return CFrame.new(0, self.Height, 0) * self.WorldCFrame * self.Headset.UserCFrame
     elseif i == "HeadPosition" then

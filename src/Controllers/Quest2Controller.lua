@@ -24,7 +24,10 @@ local function getOculusControllerGamepadNum()
     local gamepadNums = UserInputService:GetConnectedGamepads()
 
     for _,gamepadNum in ipairs(gamepadNums) do
-        -- Check for controllers with vibration motors due to GamepadSupports() returning false for all Oculus controller KeyCodes
+        --[[
+            Check for controllers with vibration motors due to GamepadSupports()
+            returning false for all Oculus controller KeyCodes
+        ]]
         local valid = true
 
         for _,vibrationMotor in ipairs(HAND_VIBRATION_MOTOR_MAP) do
@@ -77,7 +80,9 @@ function QUEST2_CONTROLLER_METATABLE:__index(i)
         if camera.HeadLocked then
             return camera.CFrame * self.UserCFrame
         else
-            return camera:GetRenderCFrame() * UserInputService:GetUserCFrame(Enum.UserCFrame.Head):Inverse() * self.UserCFrame
+            return camera:GetRenderCFrame()
+                * UserInputService:GetUserCFrame(Enum.UserCFrame.Head):Inverse()
+                * self.UserCFrame
         end
     elseif i == "WorldPosition" then
         --[=[
@@ -294,7 +299,8 @@ end
     @param vibrationValue number
     @param duration number
     @return Promise<void>
-    Vibrates the controller for a limited amount of time, can be cancelled from the returned promise.
+    Vibrates the controller for a limited amount of time, can be cancelled from
+    the returned promise.
 ]=]
 function QUEST2_CONTROLLER_METATABLE:Vibrate(vibrationValue, duration)
     duration = duration or 0.1

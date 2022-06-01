@@ -93,7 +93,8 @@ end
 
 --[=[
     @within Headset
-    Equivalent to `UserInputService:RecenterUserHeadCFrame()` and `VRService:RecenterUserHeadCFrame()`.
+    Equivalent to `UserInputService:RecenterUserHeadCFrame()` and
+    `VRService:RecenterUserHeadCFrame()`.
 ]=]
 function HEADSET_METATABLE:Recenter()
     UserInputService:RecenterUserHeadCFrame()
