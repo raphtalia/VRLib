@@ -99,7 +99,7 @@ function LaserPointer:constructor(controller)
     local rootPart = Instance.new("Part")
     rootPart.Name = "LaserPointer"
     rootPart.Transparency = 1
-    rootPart.Size = Vector3.new(1, 1, 1)
+    rootPart.Size = Vector3.one
     rootPart.CanCollide = false
     rootPart.CanQuery = false
     rootPart.CanTouch = false

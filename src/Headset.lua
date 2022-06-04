@@ -61,7 +61,7 @@ function Headset:constructor()
         error("Headset not detected", 2)
     end
 
-    rawset(self, "_velocity", Vector3.new())
+    rawset(self, "_velocity", Vector3.zero)
     rawset(self, "_destroying", Signal.new())
 
     local lastUserPos = self.UserPosition
