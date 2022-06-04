@@ -35,6 +35,35 @@ local function isPartInViewport(part)
     return true
 end
 
+local function makeEvent(name, parent)
+    local event = Instance.new("BindableEvent")
+    event.Name = name
+    event.Parent = parent
+    return event
+end
+
+local function getCFrameNormal(cframe, normalId)
+    if normalId == Enum.NormalId.Top then
+        return cframe.UpVector
+    elseif normalId == Enum.NormalId.Bottom then
+        return -cframe.UpVector
+    elseif normalId == Enum.NormalId.Back then
+        return -cframe.LookVector
+    elseif normalId == Enum.NormalId.Front then
+        return cframe.LookVector
+    elseif normalId == Enum.NormalId.Right then
+        return cframe.RightVector
+    elseif normalId == Enum.NormalId.Left then
+        return -cframe.RightVector
+    end
+end
+
+local function raycastResultToGuiObject(panel, raycastResult)
+    if getCFrameNormal(panel.RootPart.CFrame, raycastResult.Normal) then
+
+    end
+end
+
 --[=[
     @class Panel
     WIP expansion for UI support, documentation to come
@@ -111,6 +140,63 @@ function Panel:constructor()
     rawset(self, "_delayedTracking", false)
     rawset(self, "_destroying", Signal.new())
 
+    -- Custom panel interaction logic
+    makeEvent("MouseButton1Down", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+    makeEvent("MouseButton1Up", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+    makeEvent("MouseButton2Down", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+    makeEvent("MouseButton2Up", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+    makeEvent("MouseEnter", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+    makeEvent("MouseLeave", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+    makeEvent("MouseMoved", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+    makeEvent("MouseWheelBackward", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+    makeEvent("MouseWheelForward", rootPart).Event:Connect(function(raycastResult)
+        local guiObject = raycastResultToGuiObject(self, raycastResult)
+        if guiObject then
+
+        end
+    end)
+
+    -- Panel animation logic
     local motors = Flipper.GroupMotor.new({
         Pitch = 0,
         Yaw = 0,
@@ -165,6 +251,10 @@ function PANEL_METATABLE:Destroy()
     rawget(self, "RenderStepDisconnect")()
     self.RootPart:Destroy()
     self.RootGui:Destroy()
+end
+
+function PANEL_METATABLE:GetUserInputSignal(name, guiObject)
+
 end
 
 -- roblox-ts compatability

@@ -176,7 +176,7 @@ function Quest2Controller:constructor(hand, gamepadNum)
     -- roblox-ts compatibility
     fixSuperclass(self, Quest2Controller, QUEST2_CONTROLLER_METATABLE)
 
-    rawset(self, "_velocity", Vector3.new())
+    rawset(self, "_velocity", Vector3.zero)
     rawset(self, "_hand", hand)
     rawset(self, "_gamepadNum", gamepadNum or getOculusControllerGamepadNum())
     rawset(self, "_inputs", table.freeze({
