@@ -137,6 +137,10 @@ return {
             assert(t.boolean(v))
         end,
 
+        PanelInteraction = function(v)
+            assert(t.boolean(v))
+        end,
+
         RaycastParams = function(v)
             assert(t.RaycastParams(v))
         end,

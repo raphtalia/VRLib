@@ -36,4 +36,7 @@ return {
         [Hand.Right] = "RController",
     },
     MIN_PART_SIZE = 0.001,
+    Tags = {
+        Panel = "VRLibPanel",
+    },
 }

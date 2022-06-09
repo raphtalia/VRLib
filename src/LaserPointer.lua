@@ -1,10 +1,20 @@
 local StarterGui = game:GetService("StarterGui")
+local CollectionService = game:GetService("CollectionService")
 
 local Signal = require(script.Parent.Parent.Signal)
 local t = require(script.Parent.Types).LaserPointer
 
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
+local normalToFace = require(script.Parent.Util.normalToFace)
+
+local Constants = require(script.Parent.Constants)
+local PANEL_TAG = Constants.Tags.Panel
+
+local function isPanel(raycastResult)
+    return CollectionService:HasTag(raycastResult.Instance, PANEL_TAG)
+        and normalToFace(raycastResult.Normal, raycastResult.Instance) == Enum.NormalId.Back
+end
 
 --[=[
     @class LaserPointer
@@ -28,6 +38,14 @@ function LASER_POINTER_METATABLE:__index(i)
             The container for the effects of the laser pointer.
         ]=]
         return rawget(self, "_rootPart")
+    elseif i == "Panel" then
+        --[=[
+            @within LaserPointer
+            @readonly
+            @prop Panel Panel
+            The panel that the laser pointer is currently pointing at.
+        ]=]
+        return rawget(self, "_panel")
     elseif i == "Length" then
         --[=[
             @within LaserPointer
@@ -42,6 +60,13 @@ function LASER_POINTER_METATABLE:__index(i)
             Whether the laser pointer is visible.
         ]=]
         return self.RootPart.Laser.Enabled
+    elseif i == "PanelInteraction" then
+        --[=[
+            @within LaserPointer
+            @prop PanelInteraction boolean
+            Whether the laser pointer can interact with panels.
+        ]=]
+        return rawget(self, "_panelInteraction")
     elseif i == "RaycastParams" then
         --[=[
             @within LaserPointer
@@ -80,6 +105,12 @@ function LASER_POINTER_METATABLE:__newindex(i, v)
         t.Visible(v)
         self.RootPart.Laser.Enabled = v
         self.RootPart.Cursor.Visible = v
+    elseif i == "PanelInteraction" then
+        t.PanelInteraction(v)
+        rawset(self, "_panelInteraction", v)
+        if not v then
+            rawset(self, "_panel", nil)
+        end
     elseif i == "RaycastParams" then
         t.RaycastParams(v)
         rawset(self, "_raycastParams", v)
@@ -129,8 +160,9 @@ function LaserPointer:constructor(controller)
 
     rawset(self, "_controller", controller)
     rawset(self, "_rootPart", rootPart)
+    -- rawset(self, "_panel", nil)
     rawset(self, "_length", 8)
-    rawset(self, "_visible", true)
+    rawset(self, "_panelInteraction", true)
     rawset(self, "_raycastParams", RaycastParams.new())
     rawset(self, "_destroying", Signal.new())
 
@@ -148,6 +180,26 @@ function LaserPointer:constructor(controller)
             else
                 attachment1.CFrame = CFrame.new(0, 0, -self.Length)
                 cursor.Visible = false
+            end
+        end
+
+        if self.PanelInteraction then
+            if raycastResult then
+                if isPanel(raycastResult) then
+                    if self.Panel == raycastResult.Instance then
+                        self.Panel.MouseMoved:Fire(raycastResult)
+                    else
+                        if self.Panel then
+                            self.Panel.MouseLeave:Fire()
+                        end
+
+                        rawset(self, "_panel", raycastResult.Instance)
+                        self.Panel.MouseEnter:Fire(raycastResult)
+                    end
+                end
+            elseif self.Panel then
+                self.Panel.MouseLeave:Fire()
+                rawset(self, "_panel", nil)
             end
         end
 
@@ -174,6 +226,9 @@ function LASER_POINTER_METATABLE:Destroy()
     self.Destroying:Fire()
     rawget(self, "RenderStepDisconnect")()
     self.RootPart:Destroy()
+    if self.Panel then
+        self.Panel.MouseLeave:Fire()
+    end
 end
 
 -- roblox-ts compatability

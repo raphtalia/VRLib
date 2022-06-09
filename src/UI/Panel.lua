@@ -1,4 +1,5 @@
 local Players = game:GetService("Players")
+local CollectionService = game:GetService("CollectionService")
 
 local TrackingBehavior = require(script.Parent.TrackingBehavior)
 local Signal = require(script.Parent.Parent.Parent.Signal)
@@ -7,9 +8,11 @@ local t = require(script.Parent.Parent.Types).Panel
 
 local fixSuperclass = require(script.Parent.Parent.Util.fixSuperclass)
 local bindToRenderStep = require(script.Parent.Parent.Util.bindToRenderStep)
+local getGuiObjectsAtPosition = require(script.Parent.Parent.Util.getGuiObjectsAtPosition)
 
 local Constants = require(script.Parent.Parent.Constants)
 local MIN_PART_SIZE = Constants.MIN_PART_SIZE
+local PANEL_TAG = Constants.Tags.Panel
 
 local LocalPlayer = Players.LocalPlayer
 
@@ -42,26 +45,13 @@ local function makeEvent(name, parent)
     return event
 end
 
-local function getCFrameNormal(cframe, normalId)
-    if normalId == Enum.NormalId.Top then
-        return cframe.UpVector
-    elseif normalId == Enum.NormalId.Bottom then
-        return -cframe.UpVector
-    elseif normalId == Enum.NormalId.Back then
-        return -cframe.LookVector
-    elseif normalId == Enum.NormalId.Front then
-        return cframe.LookVector
-    elseif normalId == Enum.NormalId.Right then
-        return cframe.RightVector
-    elseif normalId == Enum.NormalId.Left then
-        return -cframe.RightVector
-    end
-end
-
 local function raycastResultToGuiObject(panel, raycastResult)
-    if getCFrameNormal(panel.RootPart.CFrame, raycastResult.Normal) then
+    local guiSize = panel.RootGui.AbsoluteSize
+    local panelSize = panel.RootPart.Size
+    local pos = (panel.RootPart.CFrame * CFrame.new(-panelSize.X / 2, panelSize.Y / 2, -panelSize.Z / 2)):PointToObjectSpace(raycastResult.Position)
+    pos = Vector2.new((pos.X / panelSize.X) * guiSize.X, -(pos.Y / panelSize.Y) * guiSize.Y)
 
-    end
+    return getGuiObjectsAtPosition(panel.RootGui, pos)[1]
 end
 
 --[=[
@@ -127,10 +117,13 @@ function Panel:constructor()
     local rootGui = Instance.new("SurfaceGui")
     rootGui.Name = "RootGui"
     rootGui.Adornee = rootPart
-    rootGui.AlwaysOnTop = true
     rootGui.ResetOnSpawn = false
     rootGui.Face = Enum.NormalId.Back
+    rootGui.LightInfluence = 0
     rootGui.Parent = LocalPlayer.PlayerGui
+    rootGui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+
+    CollectionService:AddTag(rootPart, PANEL_TAG)
 
     rawset(self, "_rootPart", rootPart)
     rawset(self, "_rootGui", rootGui)
@@ -172,10 +165,10 @@ function Panel:constructor()
         end
     end)
     makeEvent("MouseLeave", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
+        -- local guiObject = raycastResultToGuiObject(self, raycastResult)
+        -- if guiObject then
 
-        end
+        -- end
     end)
     makeEvent("MouseMoved", rootPart).Event:Connect(function(raycastResult)
         local guiObject = raycastResultToGuiObject(self, raycastResult)
