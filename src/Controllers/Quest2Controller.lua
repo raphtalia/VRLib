@@ -151,7 +151,7 @@ function QUEST2_CONTROLLER_METATABLE:__index(i)
         ]=]
         return rawget(self, "_destroying")
     else
-        return QUEST2_CONTROLLER_METATABLE[i] or error(i.. " is not a valid member of Controller", 2)
+        return QUEST2_CONTROLLER_METATABLE[i] or error(i.. " is not a valid member of Quest2Controller", 2)
     end
 end
 function QUEST2_CONTROLLER_METATABLE:__newindex(i, v)
@@ -162,7 +162,7 @@ function QUEST2_CONTROLLER_METATABLE:__newindex(i, v)
         t.TouchpadMode(v)
         VRService:SetTouchpadMode(HAND_VR_TOUCHPAD_MAP[self.Hand], v)
     else
-        error(i.. " is not a valid member of Controller or is unassignable", 2)
+        error(i.. " is not a valid member of Quest2Controller or is unassignable", 2)
     end
 end
 
