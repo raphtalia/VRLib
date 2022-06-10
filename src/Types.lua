@@ -20,7 +20,13 @@ local Threshold = t.numberConstrainedExclusive(0, 1)
 
 return {
     Headset = {
+        UserCFrameOffset = function(v)
+            assert(t.CFrame(v))
+        end,
 
+        UserPositionOffset = function(v)
+            assert(t.Vector3(v))
+        end,
     },
     Controller = {
         Hand = function(v)

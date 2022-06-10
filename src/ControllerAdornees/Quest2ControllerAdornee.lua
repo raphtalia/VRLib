@@ -49,7 +49,7 @@ function QUEST2_CONTROLLER_ADORNEE_METATABLE:__index(i)
         ]=]
         return rawget(self, "_destroying")
     else
-        return QUEST2_CONTROLLER_ADORNEE_METATABLE[i] or error(i.. " is not a valid member of Controller", 2)
+        return QUEST2_CONTROLLER_ADORNEE_METATABLE[i] or error(i.. " is not a valid member of Quest2ControllerAdornee", 2)
     end
 end
 function QUEST2_CONTROLLER_ADORNEE_METATABLE:__newindex(i, v)
@@ -57,7 +57,7 @@ function QUEST2_CONTROLLER_ADORNEE_METATABLE:__newindex(i, v)
         t.Controller(v)
         rawset(self, "_hand", v)
     else
-        error(i.. " is not a valid member of Controller or is unassignable", 2)
+        error(i.. " is not a valid member of Quest2ControllerAdornee or is unassignable", 2)
     end
 end
 

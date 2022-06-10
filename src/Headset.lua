@@ -2,10 +2,11 @@ local UserInputService = game:GetService("UserInputService")
 local VRService = game:GetService("VRService")
 
 local Signal = require(script.Parent.Parent.Signal)
--- local t = require(script.Parent.Types).Headset
+local t = require(script.Parent.Types).Headset
 
 local fixSuperclass = require(script.Parent.Util.fixSuperclass)
 local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
+local setCFramePos = require(script.Parent.Util.setCFramePos)
 
 --[=[
     @class Headset
@@ -13,14 +14,33 @@ local bindToRenderStep = require(script.Parent.Util.bindToRenderStep)
 local Headset = {}
 local HEADSET_METATABLE = {}
 function HEADSET_METATABLE:__index(i)
-    if i == "UserCFrame" then
+    if i == "RawUserCFrame" then
+        --[=[
+            @within Headset
+            @readonly
+            @prop RawUserCFrame CFrame
+            The raw (unaffected by `Headset.UserCFrameOffset`) real-life
+            position and rotation of the headset.
+        ]=]
+        return UserInputService:GetUserCFrame(Enum.UserCFrame.Head)
+    elseif i == "UserCFrame" then
         --[=[
             @within Headset
             @readonly
             @prop UserCFrame CFrame
             The real-life position and rotation of the headset.
         ]=]
-        return UserInputService:GetUserCFrame(Enum.UserCFrame.Head)
+        return self.UserCFrameOffset
+            * UserInputService:GetUserCFrame(Enum.UserCFrame.Head)
+    elseif i == "RawUserPosition" then
+        --[=[
+            @within Headset
+            @readonly
+            @prop RawUserPosition Vector3
+            The raw (unaffected by `Headset.UserPositionOffset`) real-life
+            position of the headset.
+        ]=]
+        return self.RawUserCFrame.Position
     elseif i == "UserPosition" then
         --[=[
             @within Headset
@@ -29,6 +49,20 @@ function HEADSET_METATABLE:__index(i)
             The real-life position of the headset.
         ]=]
         return self.UserCFrame.Position
+    elseif i == "UserCFrameOffset" then
+        --[=[
+            @within Headset
+            @prop UserCFrameOffset CFrame
+            Offset applied before `Headset.UserCFrame` is returned.
+        ]=]
+        return rawget(self, "_userCFrameOffset")
+    elseif i == "UserPositionOffset" then
+        --[=[
+            @within Headset
+            @prop UserPositionOffset Vector3
+            Offset applied before `Headset.UserPosition` is returned.
+        ]=]
+        return self.UserCFrameOffset.Position
     elseif i == "Velocity" then
         --[=[
             @within Headset
@@ -49,8 +83,16 @@ function HEADSET_METATABLE:__index(i)
         return HEADSET_METATABLE[i] or error(i.. " is not a valid member of Headset", 2)
     end
 end
-function HEADSET_METATABLE:__newindex(i)
-    error(i.. " is not a valid member of Headset or is unassignable", 2)
+function HEADSET_METATABLE:__newindex(i, v)
+    if i == "UserCFrameOffset" then
+        t.UserCFrameOffset(v)
+        rawset(self, "_userCFrameOffset", v)
+    elseif i == "UserPositionOffset" then
+        t.UserPositionOffset(v)
+        self.UserCFrameOffset = setCFramePos(v, self.UserCFrameOffset)
+    else
+        error(i.. " is not a valid member of Headset or is unassignable", 2)
+    end
 end
 
 function Headset:constructor()
@@ -61,6 +103,7 @@ function Headset:constructor()
         error("Headset not detected", 2)
     end
 
+    rawset(self, "_userCFrameOffset", CFrame.new())
     rawset(self, "_velocity", Vector3.zero)
     rawset(self, "_destroying", Signal.new())
 

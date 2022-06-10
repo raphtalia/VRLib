@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local VRLib = require(ReplicatedStorage.Packages.VRLib)
 local Promise = require(ReplicatedStorage.Packages.Promise)
@@ -20,6 +21,13 @@ local rightLaser = VRLib.LaserPointer.new(rightController)
 rightLaser.Length = 32
 rightLaser.Visible = false
 
+local function goto(pos)
+    local rawUserPos = headset.RawUserPosition
+    vrCamera.WorldPosition = pos
+    -- Set the UserCFrame to where the person is standing while keeping rotation
+    headset.UserPositionOffset = Vector3.new(-rawUserPos.X, 0, -rawUserPos.Z)
+end
+
 leftController.Inputs.Thumbstick.Changed:Connect(function(loc)
     -- Without this check NaN values will be written to VRCamera
     if loc.Magnitude > 0 then
@@ -35,12 +43,12 @@ end)
 leftController.Inputs.IndexTrigger.Up:Connect(function()
     leftLaser.Visible = false
     if leftLaser.RaycastResult then
-        vrCamera.WorldPosition = leftLaser.RaycastResult.Position
+        goto(leftLaser.RaycastResult.Position)
     end
 end)
 
 rightController.Inputs.Thumbstick.EdgeEntered:Connect(function()
-    local loc = rightController.ThumbstickLocation
+    local loc = rightController.Inputs.Thumbstick.Location
     local angle = math.deg(math.atan2(loc.X, loc.Y)) + 180
 
     if angle > 30 and angle < 150 then
@@ -57,10 +65,23 @@ end)
 rightController.Inputs.IndexTrigger.Up:Connect(function()
     rightLaser.Visible = false
     if rightLaser.RaycastResult then
-        vrCamera.WorldPosition = rightLaser.RaycastResult.Position
+        goto(rightLaser.RaycastResult.Position)
     end
 end)
 
 rightController.Inputs.Button2.Down:Connect(function()
     vrCamera.WorldCFrame = CFrame.new()
+end)
+
+-- Push the camera up if the controllers are below the floor
+RunService.RenderStepped:Connect(function()
+    local leftWorldPos = leftController.WorldPosition
+    local rightWorldPos = rightController.WorldPosition
+    local camWorldPos = vrCamera.WorldPosition
+
+    if leftWorldPos.Y < camWorldPos.Y then
+        vrCamera.Height += camWorldPos.Y - leftWorldPos.Y
+    elseif rightWorldPos.Y < camWorldPos.Y then
+        vrCamera.Height += camWorldPos.Y - rightWorldPos.Y
+    end
 end)
