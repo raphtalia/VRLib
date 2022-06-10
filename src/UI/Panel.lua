@@ -45,13 +45,11 @@ local function makeEvent(name, parent)
     return event
 end
 
-local function raycastResultToGuiObject(panel, raycastResult)
+local function raycastResultToVector2(panel, raycastResult)
     local guiSize = panel.RootGui.AbsoluteSize
     local panelSize = panel.RootPart.Size
     local pos = (panel.RootPart.CFrame * CFrame.new(-panelSize.X / 2, panelSize.Y / 2, -panelSize.Z / 2)):PointToObjectSpace(raycastResult.Position)
-    pos = Vector2.new((pos.X / panelSize.X) * guiSize.X, -(pos.Y / panelSize.Y) * guiSize.Y)
-
-    return getGuiObjectsAtPosition(panel.RootGui, pos)[1]
+    return Vector2.new((pos.X / panelSize.X) * guiSize.X, -(pos.Y / panelSize.Y) * guiSize.Y)
 end
 
 --[=[
@@ -65,6 +63,8 @@ function PANEL_METATABLE:__index(i)
         return rawget(self, "_rootPart")
     elseif i == "RootGui" then
         return rawget(self, "_rootGui")
+    elseif i == "FocusedGuiObject" then
+        return rawget(self, "_focusedGuiObject")
     elseif i == "CFrame" then
         return rawget(self, "_cframe")
     elseif i == "Position" then
@@ -134,59 +134,54 @@ function Panel:constructor()
     rawset(self, "_destroying", Signal.new())
 
     -- Custom panel interaction logic
-    makeEvent("MouseButton1Down", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
-
+    local mouseButton1DownGuiObject
+    local mouseButton2DownGuiObject
+    local function update(raycastResult)
+        local pos = raycastResultToVector2(self, raycastResult)
+        local guiObject = getGuiObjectsAtPosition(rootGui, pos)[1]
+        if self.FocusedGuiObject ~= guiObject then
+            rawset(self, "_focusedGuiObject", guiObject)
+            mouseButton1DownGuiObject = nil
+            mouseButton2DownGuiObject = nil
         end
+        return guiObject, pos.X, pos.Y
+    end
+
+    makeEvent("MouseButton1Down", rootPart).Event:Connect(function(raycastResult)
+        local guiObject, x, y = update(raycastResult)
+        self.MouseButton1Down:Fire(guiObject, x, y)
+        mouseButton1DownGuiObject = guiObject
     end)
     makeEvent("MouseButton1Up", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
-
+        local guiObject, x, y = update(raycastResult)
+        self.MouseButton1Up:Fire(guiObject, raycastResult)
+        if mouseButton1DownGuiObject == guiObject then
+            self.MouseButton1Click:Fire(guiObject, raycastResult)
         end
     end)
     makeEvent("MouseButton2Down", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
-
-        end
+        local guiObject, x, y = update(raycastResult)
+        self.MouseButton2Down:Fire(guiObject, raycastResult)
+        mouseButton2DownGuiObject = guiObject
     end)
     makeEvent("MouseButton2Up", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
-
-        end
+        local guiObject, x, y = update(raycastResult)
+        self.MouseButton2Up:Fire(guiObject, raycastResult)
     end)
     makeEvent("MouseEnter", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
-
-        end
+        self.MouseEnter:Fire(update(raycastResult))
     end)
-    makeEvent("MouseLeave", rootPart).Event:Connect(function(raycastResult)
-        -- local guiObject = raycastResultToGuiObject(self, raycastResult)
-        -- if guiObject then
-
-        -- end
+    makeEvent("MouseLeave", rootPart).Event:Connect(function()
+        rawset(self, "_focusedGuiObject", nil)
     end)
     makeEvent("MouseMoved", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
-
-        end
+        self.MouseMoved:Fire(update(raycastResult))
     end)
     makeEvent("MouseWheelBackward", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
-
-        end
+        self.MouseWheelBackward:Fire(update(raycastResult))
     end)
     makeEvent("MouseWheelForward", rootPart).Event:Connect(function(raycastResult)
-        local guiObject = raycastResultToGuiObject(self, raycastResult)
-        if guiObject then
-
-        end
+        self.MouseWheelForward:Fire(update(raycastResult))
     end)
 
     -- Panel animation logic
