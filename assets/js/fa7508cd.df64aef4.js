@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[807],{6112:function(e){e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"Panel","desc":"WIP expansion for UI support, documentation to come","source":{"line":43,"path":"src/UI/Panel.lua"}}')}}]);
