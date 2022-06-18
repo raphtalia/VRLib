@@ -3,20 +3,21 @@ title = "VRLib"
 gitRepoUrl = "https://github.com/raphtalia/VRLib"
 gitSourceBranch = "main"
 
-classOrder = [
-  "VRLib",
-  "Headset",
-  "VRCamera",
-  "LaserPointer",
-  "Quest2Controller",
-  "Quest2ControllerAdornee",
-  "Button",
-  "Trigger",
-  "Thumbstick",
-  "Panel",
-  "Hand",
-  "TrackingBehavior",
-]
+[[classOrder]]
+classes = ["VRLib", "Headset", "VRCamera", "LaserPointer", "Hand"]
+section = "VRLib"
+
+[[classOrder]]
+classes = ["Quest2Controller", "Quest2ControllerAdornee"]
+section = "Quest 2"
+
+[[classOrder]]
+classes = ["Panel", "TrackingBehavior"]
+section = "UI"
+
+[[classOrder]]
+classes = ["Button", "Trigger", "Thumbstick"]
+section = "Inputs"
 
 [home]
 enabled = true
